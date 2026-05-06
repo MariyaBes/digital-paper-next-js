@@ -1,24 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import {DocumentDTO, documentTypeLabels} from "../../dto/document.types";
 
-type DocumentDTO = {
-    id: number;
-    name: string;
-    type?: keyof typeof documentTypeLabels;
-    createdBy?: string;
-    description?: string;
-};
 
-const documentTypeLabels = {
-    ADMINISTRATIVE: 'Административный',
-    FINANCIAL: 'Финансовый',
-    HR: 'HR',
-    JURIDICAL: 'Юридический',
-    MANUFACTUR: 'Производственный',
-    MARKETING: 'Маркетинг',
-    INFORMATION_ANALYTICAL: 'Информационно-аналитический',
-    OTHER: 'Другое',
-};
 
 export default function ViewDocumentPage() {
     const { id } = useParams();

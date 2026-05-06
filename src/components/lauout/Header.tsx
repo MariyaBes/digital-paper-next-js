@@ -1,73 +1,31 @@
-import { useLocation } from "react-router-dom";
+import {HeaderInterface} from "../../dto/header.types";
 
-interface User {
-    id: number;
-    login: string;
-    email: string;
-    imageUrl?: string;
-}
-
-interface SidebarProps {
-    collapse: boolean;
-    windowWidth: number;
-    closeSidebar: () => void;
-    showSidebar: boolean;
-    role: "employee" | "director";
-    user: User | null;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({
-                                             collapse,
-                                             windowWidth,
-                                             closeSidebar,
-                                             showSidebar,
-                                             role,
-                                             user,
-                                         }) => {
-    const location = useLocation();
-
-    const menuLinks = role === "employee" ? employeeMenuLink : pathName === '/director' ? directorMenuLink : organizationMenuLink;
+export default function Header({
+   pageTitle,
+   toggleStateCollapse,
+   windowWidth,
+   toggleSidebar,
+}: HeaderInterface) {
+    const handleToggleCollapse = () => {
+        if (windowWidth >= 768) {
+            toggleStateCollapse();
+        } else {
+            toggleSidebar();
+        }
+    };
 
     return (
-        <>
-            {showSidebar && windowWidth < 768 && (
-                <div className="overflow" onClick={closeSidebar} id="overflow"></div>
-            )}
-            <aside
-                className={
-                    windowWidth < 768 || !collapse
-                        ? showSidebar
-                            ? "sidebar"
-                            : "sidebar closed"
-                        : collapse
-                            ? "sidebar collapsed"
-                            : "sidebar"
-                }
-            >
-                <header>
-                    <Link shallow href={ role === 'employee' ? '/documents' : '/director/organization/documents'} title="DigitalPaper логотип">
-                        {collapse ? (
-                            <div className="logo background-image">
-                                <LogoThumb />
-                            </div>
-                        ) : (
-                            <Logo />
-                        )}
-                    </Link>
-                </header>
+        <header className="header">
+            <button className="menu-burger" onClick={handleToggleCollapse} type="button">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <path
+                        d="M5.33301 9.33333C5.33301 8.97971 5.47348 8.64057 5.72353 8.39052C5.97358 8.14048 6.31272 8 6.66634 8H25.333C25.6866 8 26.0258 8.14048 26.2758 8.39052C26.5259 8.64057 26.6663 8.97971 26.6663 9.33333C26.6663 9.68696 26.5259 10.0261 26.2758 10.2761C26.0258 10.5262 25.6866 10.6667 25.333 10.6667H6.66634C6.31272 10.6667 5.97358 10.5262 5.72353 10.2761C5.47348 10.0261 5.33301 9.68696 5.33301 9.33333ZM5.33301 16C5.33301 15.6464 5.47348 15.3072 5.72353 15.0572C5.97358 14.8071 6.31272 14.6667 6.66634 14.6667H25.333C25.6866 14.6667 26.0258 14.8071 26.2758 15.0572C26.5259 15.3072 26.6663 15.6464 26.6663 16C26.6663 16.3536 26.5259 16.6928 26.2758 16.9428C26.0258 17.1929 25.6866 17.3333 25.333 17.3333H6.66634C6.31272 17.3333 5.97358 17.1929 5.72353 16.9428C5.47348 16.6928 5.33301 16.3536 5.33301 16ZM5.33301 22.6667C5.33301 22.313 5.47348 21.9739 5.72353 21.7239C5.97358 21.4738 6.31272 21.3333 6.66634 21.3333H25.333C25.6866 21.3333 26.0258 21.4738 26.2758 21.7239C26.5259 21.9739 26.6663 22.313 26.6663 22.6667C26.6663 23.0203 26.5259 23.3594 26.2758 23.6095C26.0258 23.8595 25.6866 24 25.333 24H6.66634C6.31272 24 5.97358 23.8595 5.72353 23.6095C5.47348 23.3594 5.33301 23.0203 5.33301 22.6667Z"
+                        fill="#1F1F1F"
+                    />
+                </svg>
+            </button>
 
-                <div className="aside-container">
-                    <MenuList items={menuLinks} collapse={collapse} />
-
-                    <Link href={`${role === 'employee' ? "/setting" : pathName === '/director' ? "/director/setting" : "/director/organization/setting"}`} className={`aside-container__user user ${collapse ? 'user-collapse' : ''}`}>
-                        {user ? (
-                            <User imageUrl={user.imageUrl || ""} login={user.login} email={user.email} collapse={collapse} />
-                        ) : null}
-                    </Link>
-                </div>
-            </aside>
-        </>
+            <h1 className="header-title">{pageTitle}</h1>
+        </header>
     );
-};
-
-export default Sidebar;
+}

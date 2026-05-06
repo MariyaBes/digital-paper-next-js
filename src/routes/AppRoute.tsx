@@ -6,6 +6,7 @@ import LoginPage from "../pages/AuthPage/LoginPage";
 import RegisterPage from "../pages/AuthPage/RegisterPage";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DocumentPage from "../pages/DocumentsPage/DocumentPage";
+import ViewDocumentPage from "../pages/DocumentsPage/ViewDocumentPage";
 
 
 export default function AppRoute() {

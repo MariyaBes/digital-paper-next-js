@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+import {ReactComponent as UploadIcon} from "../../assets/icons/solar_upload-linear.svg";
+import {ReactComponent as CreateIcon} from "../../assets/icons/tabler_edit.svg";
+import Search from "../../components/elements/Search";
+import DocumentCreateModal from "../../components/elements/Modals/DocumentCreateModal";
+import InputUpload from "../../components/ui/Inputs/InputUpload";
+import DocumentsDataTable from "./DocumentDataTable";
+import {useModalLogic} from "../../hooks/useModalHook";
+
+
 export default function DocumentPage() {
     const { showModal, showOverflow, openModal, closeModal } = useModalLogic();
 
