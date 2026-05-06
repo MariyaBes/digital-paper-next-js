@@ -3,12 +3,12 @@ import { Link, useLocation } from 'react-router-dom';
 import MenuList from './MenuList';
 import User from './User';
 
-import { ReactComponent as LogoThumb } from '../../assets/images/Logo-thumb.svg';
+import { ReactComponent as LogoThumb } from '../../../assets/images/Logo-thumb.svg';
 
 import { employeeMenuLink } from './EmployeeMenu';
 import { directorMenuLink } from './DirectorMenu';
 import { organizationMenuLink } from './OrganizationMenu';
-import {SidebarUser} from "../../../dto/sidebar.types";
+import {SidebarUser} from "../../../types/sidebar.types";
 import Logo from "../../ui/Logo";
 
 

@@ -1,5 +1,5 @@
-import placeholderAvatar from '../../assets/icons/Avatar.svg';
-import {CollapsedUser} from "../../../dto/sidebar.types";
+import placeholderAvatar from '../../../assets/icons/Avatar.svg';
+import {CollapsedUser} from "../../../types/sidebar.types";
 
 export default function User({ collapse, login, email, imageUrl }: CollapsedUser) {
     return (

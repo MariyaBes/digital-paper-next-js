@@ -1,10 +1,10 @@
-import { ReactComponent as DocIcon } from '../../assets/icons/document.svg';
-import { ReactComponent as TemplateIcon } from '../../assets/icons/template.svg';
-import { ReactComponent as InfoIcon } from '../../assets/icons/lucide_info.svg';
-import { ReactComponent as EmployeeIcon } from '../../assets/icons/tabler_users.svg';
-import { ReactComponent as BackIcon } from '../../assets/icons/back.svg';
-import { ReactComponent as DepartamentIcon } from '../../assets/icons/departament.svg';
-import {MenuLink} from "../../../dto/sidebar.types";
+import { ReactComponent as DocIcon } from '../../../assets/icons/document.svg';
+import { ReactComponent as TemplateIcon } from '../../../assets/icons/template.svg';
+import { ReactComponent as InfoIcon } from '../../../assets/icons/lucide_info.svg';
+import { ReactComponent as EmployeeIcon } from '../../../assets/icons/tabler_users.svg';
+import { ReactComponent as BackIcon } from '../../../assets/icons/back.svg';
+import { ReactComponent as DepartamentIcon } from '../../../assets/icons/departament.svg';
+import {MenuLink} from "../../../types/sidebar.types";
 
 export const organizationMenuLink: MenuLink[] = [
     {

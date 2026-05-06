@@ -7,6 +7,7 @@ import RegisterPage from "../pages/AuthPage/RegisterPage";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DocumentPage from "../pages/DocumentsPage/DocumentPage";
 import ViewDocumentPage from "../pages/DocumentsPage/ViewDocumentPage";
+import AuthCallbackPage from "../pages/AuthPage/AuthCallbackPage";
 
 
 export default function AppRoute() {
@@ -16,6 +17,7 @@ export default function AppRoute() {
                 <Routes>
                     <Route path="/" element={<RedirectPage />} />
 
+                    <Route path="/auth/callback" element={<AuthCallbackPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/register" element={<RegisterPage />} />
 
@@ -25,9 +27,10 @@ export default function AppRoute() {
                                 <DashboardLayout />
                             </PrivateRoute>
                         }
-                    />
+                    >
                         <Route path="/documents" element={<DocumentPage />} />
                         <Route path="/documents/:id" element={<ViewDocumentPage />} />
+                    </Route>
                 </Routes>
             </AppLayout>
         </BrowserRouter>

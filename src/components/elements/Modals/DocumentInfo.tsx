@@ -1,6 +1,6 @@
-import {DocumentInfoInterface} from "../../../dto/document.types";
-import { ReactComponent as CloseIcon } from '../../assets/icons/iconamoon_close-duotone.svg';
-import PlaceholderImage from '../../assets/images/SLUG.png';
+import {DocumentInfoInterface} from "../../../types/document.types";
+import { ReactComponent as CloseIcon } from '../../../assets/icons/iconamoon_close-duotone.svg';
+import PlaceholderImage from '../../../assets/images/SLUG.png';
 import {Link} from "react-router-dom";
 import ButtonPrimary from "../../ui/Buttons/ButtonPrimary";
 

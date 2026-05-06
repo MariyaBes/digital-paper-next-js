@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {DataType, documentTypeLabels} from "../../dto/document.types";
+import {DataType, documentTypeLabels} from "../../types/document.types";
 import {Dropdown, Table, TableColumnsType} from "antd";
 import {Link} from "react-router-dom";
 

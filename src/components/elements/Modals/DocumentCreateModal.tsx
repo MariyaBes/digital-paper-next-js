@@ -1,8 +1,8 @@
-import {DocumentCreateModalInterface} from "../../../dto/document.types";
+import {DocumentCreateModalInterface} from "../../../types/document.types";
 import {Form, Input, Select} from "antd";
 import {useEffect, useState} from "react";
 
-import { ReactComponent as CloseIcon } from '../../assets/icons/iconamoon_close-duotone.svg';
+import { ReactComponent as CloseIcon } from '../../../assets/icons/iconamoon_close-duotone.svg';
 import ButtonPrimary from "../../ui/Buttons/ButtonPrimary";
 
 

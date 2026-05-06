@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {DocumentDTO, documentTypeLabels} from "../../dto/document.types";
+import {DocumentDTO, documentTypeLabels} from "../../types/document.types";
 
 
 

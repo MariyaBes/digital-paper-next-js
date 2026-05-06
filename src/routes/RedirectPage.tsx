@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import {useEffect} from "react";
-import {useAuth} from "../hooks/useAuth";
+import {useAuth} from "../context/AuthContext";
 
 export default function RedirectPage() {
     const navigate = useNavigate();
@@ -11,11 +11,12 @@ export default function RedirectPage() {
             return;
         }
 
-        if (!authenticated) {
-            navigate('/login', { replace: true });
-        } else {
+        if (authenticated) {
             navigate('/documents', { replace: true });
+            return;
         }
+
+        navigate('/login', { replace: true });
     }, [ready, authenticated, navigate]);
 
     return null;

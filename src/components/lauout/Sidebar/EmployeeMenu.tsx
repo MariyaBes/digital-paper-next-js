@@ -4,7 +4,7 @@ import { ReactComponent as RecycleIcon } from '../../../assets/icons/recycle.svg
 import { ReactComponent as SettingIcon } from '../../../assets/icons/setting.svg';
 import React from "react";
 import { ReactComponent as AllCompanyIcon } from '../../../assets/icons/carbon_location-company.svg'
-import {MenuLink} from "../../../dto/sidebar.types";
+import {MenuLink} from "../../../types/sidebar.types";
 
 
 export const employeeMenuLink: MenuLink[] = [

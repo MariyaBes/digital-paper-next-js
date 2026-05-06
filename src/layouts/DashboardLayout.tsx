@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from "../components/lauout/Header";
+import Sidebar from "../components/lauout/Sidebar/Sidebar";
 
 
 export default function DashboardLayout() {

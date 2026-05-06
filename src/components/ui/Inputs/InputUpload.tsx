@@ -1,4 +1,4 @@
-import {InputUploadInterface} from "../../../dto/inputs.types";
+import {InputUploadInterface} from "../../../types/inputs.types";
 import React from "react";
 
 export default function InputUpload({

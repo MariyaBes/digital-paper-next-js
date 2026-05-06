@@ -1,4 +1,4 @@
-import {ButtonInterface} from "../../../dto/buttons.types";
+import {ButtonInterface} from "../../../types/buttons.types";
 
 export default function ButtonPrimary({
     children,

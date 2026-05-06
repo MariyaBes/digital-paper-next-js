@@ -1,10 +1,11 @@
-import {MenuLink} from "../../../dto/sidebar.types";
+import {MenuLink} from "../../../types/sidebar.types";
 import {Link, useLocation, useNavigate} from "react-router-dom";
 import {notification} from "antd";
 
-import { ReactComponent as LogoutIcon } from '../../assets/icons/mage_logout.svg';
-import { ReactComponent as SuccessIcon } from '../../assets/icons/simple-line-icons_check.svg';
-import { ReactComponent as ErrorIcon } from '../../assets/icons/lucide_info.svg';
+import { ReactComponent as LogoutIcon } from '../../../assets/icons/mage_logout.svg';
+import { ReactComponent as SuccessIcon } from '../../../assets/icons/simple-line-icons_check.svg';
+import { ReactComponent as ErrorIcon } from '../../../assets/icons/lucide_info.svg';
+import {getKeycloak} from "../../../lib/keycloak";
 
 
 interface MenuListProps {
@@ -23,15 +24,10 @@ export default function MenuList({ items, collapse }: MenuListProps) {
 
     const logout = async () => {
         try {
-            /*
             const keycloak = getKeycloak();
             await keycloak.logout({
               redirectUri: `${window.location.origin}/login`,
             });
-            */
-
-            localStorage.removeItem('role');
-            localStorage.removeItem('currentCompanyId');
 
             notification.success({
                 className: 'notification notification--success',
@@ -39,8 +35,6 @@ export default function MenuList({ items, collapse }: MenuListProps) {
                 message: 'Успешно: выход из аккаунта!',
                 duration: 2,
             });
-
-            navigate('/login', { replace: true });
         } catch (e) {
             console.error('Ошибка! Не удалось выйти.', e);
 

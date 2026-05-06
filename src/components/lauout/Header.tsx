@@ -1,4 +1,4 @@
-import {HeaderInterface} from "../../dto/header.types";
+import {HeaderInterface} from "../../types/header.types";
 
 export default function Header({
    pageTitle,
