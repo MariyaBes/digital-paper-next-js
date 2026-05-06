@@ -1,0 +1,107 @@
+@import "../base.less";
+
+.auth-container {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    padding: 0 12px;
+}
+
+.grass-container {
+    padding: @padding-medium;
+    border-radius: @border-radius-standart;
+    background-color: rgba(255, 255, 255, .3);
+    height: fit-content;
+    width: 1162px;
+    display: flex;
+    -webkit-backdrop-filter: blur(5px);
+    backdrop-filter: blur(5px);
+    &__left {
+        display: none;
+    }
+    &__right {
+        margin-left: 24px;
+        padding: @padding-medium;
+        height: 100%;
+        width: 100%;
+        &-form {
+            margin-top: 64px;
+            h1 {
+                margin-left: auto;
+                margin-right: auto;
+                width: fit-content;               
+                 margin-bottom: 24px;
+            }
+            &__fields {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+            }
+            &__action {
+                width: 100%;
+            }
+            &__checkbox {
+                display: block;
+                width: 100%;
+            }
+        }
+    }
+}
+
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    max-width: 476px;
+    margin: 0 auto;
+    &__action-btn {
+        display: flex;
+        gap: 10px;
+        flex-direction: column;
+    }
+}
+
+
+
+@media screen and (min-width: 1024px) {
+    .grass-container__left {
+      display: flex;
+    margin-left: 24px; 
+    }
+    h1 {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+}
+
+@media screen and (min-width: 570px) {
+    .form__action-btn {
+        flex-direction: row;
+    }
+    .grass-container { padding: @padding-standart; }
+}
+
+@media screen and (max-width: 568px) {
+    .row {
+        flex-direction: column !important;
+    }
+}
+
+@media screen and (max-width: 425px) {
+    .grass-container__right {
+        margin-left: 0;
+        padding: 0;
+    }
+}
+
+@media screen and (min-width: 425px) {
+    h1 {
+        font-size: 32px;
+    }
+}

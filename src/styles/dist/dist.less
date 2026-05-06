@@ -1,0 +1,192 @@
+@import "../base.less";
+
+.ant-table-wrapper .ant-table-column-title {
+    font-size: 16px;
+    font-weight: 500;
+    font-family: Lato, sans-serif;
+    color: @color-black;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice {
+    border: 1px solid transparent;
+    border-radius: @border-radius-medium;
+    width: fit-content;
+}
+
+.ant-notification path {
+    stroke: @color-white;
+}
+
+.ant-notification .ant-notification-notice-wrapper .ant-notification-notice-message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: @gap-medium;
+    color: @color-white;
+    font-family: "Lato", sans-serif;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: normal;
+    list-style: none;
+}
+
+.data-table {
+    border: 1px solid @color-light-gray;
+    border-radius: @border-radius-small;
+    overflow: auto;
+}
+
+.ant-table-wrapper table { padding: 0 12px; }
+
+.ant-table-wrapper .ant-table-cell, 
+.ant-table-wrapper .ant-table-thead>tr>th, 
+.ant-table-wrapper .ant-table-tbody>tr>th, 
+.ant-table-wrapper .ant-table-tbody>tr>td, 
+.ant-table-wrapper tfoot>tr>th, 
+.ant-table-wrapper tfoot>tr>td {
+    font-family: Lato, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: @color-black;
+    padding: 10px 12px;
+}
+
+.ant-table-wrapper .ant-table-thead >tr>th, 
+.ant-table-wrapper .ant-table-thead >tr>td {    background: @color-white; }
+
+.ant-table-wrapper .ant-table-thead th.ant-table-column-has-sorters:hover { background: @color-hover-blue; }
+
+a,
+.ant-dropdown-menu-title-content {
+    font-family: Lato, sans-serif;
+    font-weight: 400;
+    font-size: 14px;
+    color: @color-black;
+    &:hover {
+        color: @color-primary;
+    }
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-header-text { font-size: 18px; }
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header { align-items: baseline; }
+
+.ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content {  padding-left: 24px; }
+
+.ant-list-custom {
+    display: flex;
+    position: relative;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #D1D5DB;
+    border-radius: 15px;
+    background-color: white;
+    padding: 12px 20px;
+    transition: all ease-in-out .2s;
+    &__link {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        width: 100%;
+        transition: all ease-in-out .2s;
+        svg {
+            min-width: 24px;
+            min-height: 24px;
+            path {
+                transition: all ease-in-out .2s;
+            }
+        }
+    }
+    &:hover {
+        background-color: #EFF6FF;
+        .ant-list-custom__link {
+            text-decoration: underline;
+            color: #4096FF;
+            svg {
+                path {
+                    stroke: #4096FF;
+                }
+            }
+        }
+    }
+    .selection {
+        border-radius: 5px;
+        right: 0;
+        left: auto;
+    }
+}
+
+.ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content > .ant-collapse-content-box {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+}
+
+.ant-form-item { margin-bottom: 20px; }
+.ant-col-sm-offset-8 { margin: 0 !important;}
+.ant-col-sm-16, .ant-col-sm-8, .ant-form-horizontal .ant-form-item-control {width: 100% !important; max-width: 100% !important;}
+
+.ant-form-item .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before, .ant-form-item .ant-form-item-label > label::after {
+    content: none !important;
+}
+
+.ant-form-item .ant-form-item-label > label { height: fit-content !important; font-family: Lato, sans-serif; }
+.ant-form-item .ant-form-item-label {text-align: start;}
+
+.ant-input, .ant-input-affix-wrapper {
+    border: 1px solid @color-slate;
+    border-radius: @border-radius-small;
+    height: fit-content;
+    padding: 10px @padding-medium;
+    transition: all ease-in-out .2s;
+    font-size: 100%;
+    outline: none;
+    max-width: 476px;
+    list-style: none;
+    line-height: normal;
+    &:focus, &:valid {
+      border-color: @color-primary;
+    }
+}
+
+.ant-checkbox + span { 
+    padding-inline-start: 20px; 
+    font-size: 14px;
+    line-height: normal;
+ }
+
+
+.ant-form { margin: 0 auto; }
+
+.modal-info__content .ant-form { margin: 0; }
+
+.ant-select-single {height: 42px;}
+
+.ant-select-outlined:not(.ant-select-customize-input) .ant-select-selector, .ant-input-affix-wrapper {
+    border-radius: @border-radius-small;
+    border: 1px solid @color-primary;
+}
+
+
+@media screen and (min-width: 570px) {
+    a, .ant-dropdown-menu-title-content,
+    .ant-table-wrapper .ant-table-cell, 
+    .ant-table-wrapper .ant-table-thead>tr>th, 
+    .ant-table-wrapper .ant-table-tbody>tr>th, 
+    .ant-table-wrapper .ant-table-tbody>tr>td, 
+    .ant-table-wrapper tfoot>tr>th, 
+    .ant-table-wrapper tfoot>tr>td  { font-size: 16px; }
+    .ant-table-wrapper .ant-table-column-title { font-size: 18px; }
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-header-text {
+        font-size: 20px;
+        font-weight: 500;
+        color: #1F1F1F;
+    }
+    .ant-collapse-ghost > .ant-collapse-item > .ant-collapse-content { padding-left: 64px; }
+    .ant-list-custom .selection { right: auto; }
+    .ant-row {  flex-direction: column; }
+    .ant-form-horizontal .ant-form-item-control { flex: auto; }
+    .ant-checkbox + span {     font-size: 16px; }
+}

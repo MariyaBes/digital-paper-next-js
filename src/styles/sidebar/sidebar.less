@@ -1,0 +1,151 @@
+@import "../base.less";
+
+.sidebar {
+  border: 1px solid @color-light-gray;
+  border-top-right-radius: @border-radius-standart;
+  border-bottom-right-radius: @border-radius-standart;
+  width: 250px;
+  height: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  float: left;
+  padding: 20px;
+  background-color: @color-white;
+  z-index: 998;
+  .logo {
+    margin-bottom: 48px;
+  } 
+  .aside-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+      &__menu {
+        width: 100%;
+        position: relative;
+      }
+      &__user {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        width: 100%;
+      }
+  }
+}
+
+
+.collapsed {
+  width: 84px;
+}
+
+.user-collapse {
+  justify-content: center;
+}
+
+
+.link {
+  &-logout {
+    margin-top: 24px;
+  }
+  &-list {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 24px;
+    padding-bottom: 48px;
+    &__item {
+      border-radius: 15px;
+      width: 100%;
+      padding: 10px 20px;
+      display: flex;
+      gap: 12px;
+      align-self: center;
+      color: @color-black;
+      font-weight: 400;
+      font-size: 16px;
+      font-family: Lato, sans-serif;
+      align-items: center;
+      cursor: pointer;
+      transition: all ease-in-out .2s;
+      &:hover {
+        background-color: @color-hover-blue;
+        color: @color-primary;
+        path {
+           stroke: @color-primary;
+        }
+      }
+      &-icon {
+        width: 24px;
+        height: 24px;
+        path {
+          transition: stroke ease-in-out .2s;
+          stroke: @color-black;
+        }
+      }
+      &-title {
+        line-height: normal;
+        display: flex;
+        align-items: center;
+      }
+      &--collapse {
+        padding: 10px;
+        justify-content: center;
+      }
+      &--active {
+        color: @color-white;
+        background-color: @color-primary;
+        transition: background-color ease-in-out .2s;
+        path {
+          stroke: @color-white;
+        }
+        &:hover {
+          color: @color-white;
+          background-color: @color-second;
+          path {
+            stroke: @color-white;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.lines-bottom {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: @color-light-slate;
+  }
+}
+
+.overflow {
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  position: absolute;
+  z-index: 999;
+  top: 0;
+  left: 0;
+}
+
+
+
+// Media
+@media screen and (max-width: 768px) {
+  .closed {
+    display: none;
+  }
+  .sidebar {
+    position: fixed;
+    height: 100%;
+    z-index: 1000;
+  }
+}

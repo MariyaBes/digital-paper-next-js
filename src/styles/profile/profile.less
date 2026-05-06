@@ -1,0 +1,177 @@
+@import "../base.less";
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-standart;
+    &-name {
+        font-size: 24px;
+        text-align: center;
+    }
+    &-block {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-large;
+        width: 100%;
+        &-item {
+            padding: @padding-standart;
+            display: flex;
+            flex-direction: column;
+            gap: @gap-medium;
+            border: 1px solid @color-light-gray;
+            justify-content: center;
+            align-items: center;
+            border-radius: @border-radius-small;
+        }
+        .right {
+            width: 100%;
+        }
+        .left {
+            height: fit-content;
+        }
+    }
+}
+
+.user {
+    &-avatar {
+      border-radius: 100px;
+      width: 36px;
+      height: 36px;
+      object-fit: cover;
+    } 
+    &-info {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      width: 100%;
+      &__name {
+        font-family: Lato, sans-serif;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+      }
+      &__email {
+        font-weight: 300;
+        font-size: 12px;
+        font-family: Lato, sans-serif;
+      }
+      &__position {
+        text-transform: uppercase;
+        font-weight: 300;
+        font-size: 16px;
+      }
+    }
+  }
+
+.header-user {
+    display: block;
+    width: 100%;
+
+}
+
+.form-emeil {
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.nav-tabs {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+    display: flex;
+    gap: @gap-medium;
+    width: 100%;
+    height: 100%;
+    .nav-tab {
+        padding: 10px 24px;
+        background-color: @color-white;
+        -webkit-border-radius: @border-radius-small;
+        -moz-border-radius: @border-radius-small;
+        -ms-border-radius: @border-radius-small;
+        -o-border-radius: @border-radius-small;
+        border-radius: @border-radius-small;
+        color: @color-black;
+        cursor: pointer;
+        height: fit-content;
+        line-height: normal;
+        -webkit-transition: all ease-in-out .2s;
+        -moz-transition: all ease-in-out .2s;
+        -ms-transition: all ease-in-out .2s;
+        -o-transition: all ease-in-out .2s;
+        transition: all ease-in-out .2s;
+        &:hover {
+            background-color: @color-light-slate;
+        }
+        &--active {
+            background-color: @color-hover-blue;
+            .nav-tab__link {
+                color: @color-second;
+            }
+        }
+        &__link {
+            font-size: 16px;
+            white-space: nowrap;
+        }
+    }
+}
+
+.tab-form {
+    display: none;
+    height: 100%;
+    width: 100%;
+    &--active {
+        display: block;
+    }
+}
+
+.tab-form .form-fields {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    .btn-primary {
+        margin-top: 12px;
+        width: fit-content;
+        span {
+            font-weight: 400;
+        }
+    }
+    .form-input {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        width: 100%;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        label {
+            font-weight: 500;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+    }
+}
+
+
+
+
+
+@media screen and (min-width: 1100px) {
+    .profile-block {
+      flex-direction: row;
+    }
+    .profile-name {
+        text-align: start;
+    }
+    .tab-form .form-fields {
+        max-width: 80%;
+    }
+  }
+
+@media screen and (max-width: 425px) {
+    .profile-block-item {
+      padding: @padding-medium;
+    }
+  }

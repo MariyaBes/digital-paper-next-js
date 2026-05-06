@@ -1,0 +1,105 @@
+@import "../base.less";
+
+.modal-info {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1000;
+    background-color: @color-white;
+    border-radius: @border-radius-small;
+    padding: @padding-standart;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-standart;
+    min-width: 500px;
+    width: fit-content;
+    max-width: 800px;
+    height: fit-content;
+    transform: translate3d( -50%, -50%, 0);
+    &__close {
+        width: 100%;
+        display: flex;
+        justify-content: end;
+        align-items: center;
+        svg {
+            cursor: pointer;
+            transition: all ease-in-out .2s;
+            &:hover {
+                transform: rotateZ(90deg) scale(0.8);
+            }
+        }
+    
+    }
+    &__content {
+        display: flex;
+        flex-direction: column;
+        gap: @gap-standart;
+        width: 100%;
+        &-about {
+            display: flex;
+            width: 100%;
+            gap: @gap-standart;
+            &__document {
+                display: flex;
+                gap: @gap-standart;
+                flex-direction: column;
+                justify-content: flex-start;
+                width: 100%;
+
+            }
+        }
+        &-details {
+            display: flex;
+            flex-direction: column;
+            gap: @gap-slim;
+            width: 100%;
+            &__title {
+                font-weight: 600;
+                font-size: 18px;
+                position: relative;
+                padding-bottom: 10px;
+                width: 100%;
+                border-bottom: 1px solid @color-light-gray;
+            }
+            &__author {
+                margin-top: 10px;
+                font-weight: 600;
+                font-size: 14px;
+                span {
+                    font-weight: 400;
+                }
+            }
+        }
+    }
+    &__actions {
+        display: flex;
+        gap: @gap-standart;
+    }
+}
+
+
+.document-title {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.document-title--alert {
+    font-size: 24px;
+}
+
+.document-date {
+    font-weight: 600;
+    font-weight: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-slim;
+    span {
+        font-size: 12px;
+        font-weight: 400;
+    }
+}
+
+.document-date--alert {
+    flex-direction: row;
+    justify-content: center;
+}
