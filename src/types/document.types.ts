@@ -1,8 +1,17 @@
+import React from 'react';
+import { DocumentStatus, DocumentType } from '../api/dto/document.dto';
+
+export {
+    documentTypeLabels,
+    documentTypeOptions,
+    documentStatusLabels,
+} from '../api/dto/document.dto';
+export type { DocumentType, DocumentStatus } from '../api/dto/document.dto';
 
 export interface Document {
-    id: number;
+    id: string;
     name: string;
-    type?: string;
+    type?: DocumentType;
     createdBy: string;
     createdDate: string;
     updatedDate: string;
@@ -15,38 +24,22 @@ export interface DocumentInfoInterface {
     document?: Document | null;
 }
 
-export const documentTypeLabels: Record<string, string> = {
-    ADMINISTRATIVE: 'Административный',
-    FINANCIAL: 'Финансовый',
-    HR: 'HR',
-    JURIDICAL: 'Юридический',
-    MANUFACTUR: 'Производственный',
-    MARKETING: 'Маркетинг',
-    INFORMATION_ANALYTICAL: 'Информационно-аналитический',
-    OTHER: 'Другое',
-};
-
-export type DocumentDTO = {
-    id: number;
-    name: string;
-    type?: keyof typeof documentTypeLabels;
-    createdBy?: string;
-    description?: string;
-};
-
 export interface DocumentCreateModalInterface {
     showModal: boolean;
     showOverflow: boolean;
-    documentPath: string;
+    file: File | null;
     documentOriginalName: string;
+    onCreated?: () => void;
     closeModal: () => void;
 }
 
 export interface DataType {
     key: React.Key;
-    id: number;
+    id: string;
     name: string;
-    type?: string;
+    type?: DocumentType;
+    status: DocumentStatus;
+    responsible: string;
     createdBy: string;
     createdDate: string;
     updatedDate: string;

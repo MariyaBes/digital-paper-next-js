@@ -1,43 +1,67 @@
-import {DocumentCreateModalInterface} from "../../../types/document.types";
-import {Form, Input, Select} from "antd";
-import {useEffect, useState} from "react";
+import { Form, Input, Select } from 'antd';
+import { useEffect, useState } from 'react';
 
 import { ReactComponent as CloseIcon } from '../../../assets/icons/iconamoon_close-duotone.svg';
-import ButtonPrimary from "../../ui/Buttons/ButtonPrimary";
+import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
+import {
+    DocumentCreateModalInterface,
+    documentTypeOptions,
+} from '../../../types/document.types';
+import { DocumentType } from '../../../api/dto/document.dto';
+import * as documentsApi from '../../../api/documents';
+import { notify, notifyError } from '../../../lib/notify';
 
+interface CreateDocumentForm {
+    name: string;
+    type: DocumentType;
+}
 
 export default function DocumentCreateModal({
     showModal,
     showOverflow,
     closeModal,
-    documentPath,
+    file,
     documentOriginalName,
+    onCreated,
 }: DocumentCreateModalInterface) {
-    const [form] = Form.useForm();
-
-    const [desc, setDesc] = useState('');
-    const [type, setType] = useState('');
-
-    const onSubmit = async () => {
-        const values = form.getFieldsValue();
-
-        const payload = {
-            name: values.name,
-            description: values.description,
-            path: documentPath,
-            type: values.category,
-        };
-
-        console.log('create document payload:', payload);
-
-        closeModal();
-    };
+    const [form] = Form.useForm<CreateDocumentForm>();
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
         if (documentOriginalName) {
             form.setFieldsValue({ name: documentOriginalName });
         }
     }, [documentOriginalName, form]);
+
+    const onSubmit = async () => {
+        let values: CreateDocumentForm;
+
+        try {
+            values = await form.validateFields();
+        } catch {
+            return;
+        }
+
+        if (!file) {
+            notify.error('Файл не выбран');
+            return;
+        }
+
+        setSubmitting(true);
+
+        try {
+            await documentsApi.uploadDocument(file, values.name.trim(), values.type);
+
+            notify.success('Документ успешно создан');
+            form.resetFields();
+            onCreated?.();
+            closeModal();
+        } catch (e) {
+            notifyError(e, 'Не удалось создать документ');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     if (!showOverflow || !showModal) {
         return null;
@@ -57,9 +81,10 @@ export default function DocumentCreateModal({
 
                     <Form
                         form={form}
-                        name="form"
+                        name="create-document"
                         initialValues={{ name: documentOriginalName }}
                         onFinish={onSubmit}
+                        layout="vertical"
                         scrollToFirstError
                     >
                         <Form.Item
@@ -76,48 +101,27 @@ export default function DocumentCreateModal({
                             <Input />
                         </Form.Item>
 
-                        <Form.Item name="description" label="Описание документа">
-                            <Input.TextArea
-                                value={desc}
-                                onChange={(e) => setDesc(e.target.value)}
-                                showCount
-                                maxLength={100}
-                            />
-                        </Form.Item>
-
                         <Form.Item
-                            name="category"
-                            label="Выберите категорию"
+                            name="type"
+                            label="Выберите тип документа"
                             rules={[
                                 {
                                     required: true,
-                                    message: 'Пожалуйста, выберите категорию!',
+                                    message: 'Пожалуйста, выберите тип документа!',
                                 },
                             ]}
                         >
                             <Select
-                                value={type}
-                                onChange={(value: string) => setType(value)}
-                                placeholder="Выберите категорию"
-                                options={[
-                                    { value: 'ADMINISTRATIVE', label: 'Административный' },
-                                    { value: 'FINANCIAL', label: 'Финансовый' },
-                                    { value: 'HR', label: 'Кадровый' },
-                                    { value: 'JURIDICAL', label: 'Юридический' },
-                                    { value: 'MANUFACTUR', label: 'Производственный' },
-                                    { value: 'MARKETING', label: 'Маркетинговый' },
-                                    {
-                                        value: 'INFORMATION_ANALYTICAL',
-                                        label: 'Информационно-аналитический',
-                                    },
-                                    { value: 'OTHER', label: 'Другой' },
-                                ]}
+                                placeholder="Выберите тип"
+                                options={documentTypeOptions}
                             />
                         </Form.Item>
                     </Form>
 
                     <div className="modal-info__actions">
-                        <ButtonPrimary onClick={onSubmit}>Создать</ButtonPrimary>
+                        <ButtonPrimary onClick={onSubmit} disabled={submitting}>
+                            Создать
+                        </ButtonPrimary>
                     </div>
                 </div>
             </div>

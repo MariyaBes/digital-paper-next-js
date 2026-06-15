@@ -7,6 +7,7 @@ import RegisterPage from "../pages/AuthPage/RegisterPage";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DocumentPage from "../pages/DocumentsPage/DocumentPage";
 import ViewDocumentPage from "../pages/DocumentsPage/ViewDocumentPage";
+import RecyclePage from "../pages/RecyclePage/RecyclePage";
 import AuthCallbackPage from "../pages/AuthPage/AuthCallbackPage";
 
 
@@ -30,6 +31,7 @@ export default function AppRoute() {
                     >
                         <Route path="/documents" element={<DocumentPage />} />
                         <Route path="/documents/:id" element={<ViewDocumentPage />} />
+                        <Route path="/recycle" element={<RecyclePage />} />
                     </Route>
                 </Routes>
             </AppLayout>

@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import {DocumentDTO, documentTypeLabels} from "../../types/document.types";
-
-
+import { documentTypeLabels } from '../../types/document.types';
+import { DocumentResponse } from '../../api/dto/document.dto';
 
 export default function ViewDocumentPage() {
     const { id } = useParams();
 
-    const [document, setDocument] = useState<DocumentDTO | null>(null);
+    const [document, setDocument] = useState<DocumentResponse | null>(null);
 
     useEffect(() => {
         const getDocument = async () => {
@@ -15,9 +14,7 @@ export default function ViewDocumentPage() {
                 return;
             }
 
-            // const response = await Api.document.getView(Number(id));
-            // setDocument(response);
-
+            // TODO: подключить эндпоинт детали документа, когда появится на бэкенде.
             console.log('document id:', id);
         };
 
@@ -37,16 +34,8 @@ export default function ViewDocumentPage() {
                 </h4>
 
                 <h4 className="container-info__type">
-                    <strong>Автор:</strong> {document?.createdBy}
+                    <strong>Ответственный:</strong> {document?.responsible}
                 </h4>
-            </div>
-
-            <div className="container-content">
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: document?.description ?? '',
-                    }}
-                />
             </div>
         </div>
     );
