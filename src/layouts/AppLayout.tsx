@@ -1,6 +1,8 @@
 import React from "react";
 import {ReactNode, useEffect} from "react";
 import {AuthProvider} from "../context/AuthContext";
+import {OrganizationProvider} from "../context/OrganizationContext";
+import {UserProvider} from "../context/UserContext";
 
 type AppLayoutProps = {
     children: ReactNode;
@@ -11,5 +13,11 @@ export default function AppLayout({ children }: AppLayoutProps) {
         document.title = "DigitalPaper";
     }, []);
 
-    return <AuthProvider>{children}</AuthProvider>;
+    return (
+        <AuthProvider>
+            <UserProvider>
+                <OrganizationProvider>{children}</OrganizationProvider>
+            </UserProvider>
+        </AuthProvider>
+    );
 }

@@ -21,7 +21,7 @@ export default function LoginPage() {
         }
 
         if (authenticated) {
-            navigate('/documents', { replace: true });
+            navigate('/all-company', { replace: true });
             return;
         }
 

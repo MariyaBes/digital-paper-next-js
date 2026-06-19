@@ -46,7 +46,7 @@ export default function Sidebar({
 
     const settingPath =
         role === 'employee'
-            ? '/setting'
+            ? '/account'
             : pathName === '/director'
                 ? '/director/setting'
                 : '/director/organization/setting';

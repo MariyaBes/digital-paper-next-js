@@ -4,11 +4,122 @@
 .editors-wrapper {
     margin: 42px 0;
     padding: @padding-medium;
-    display: block;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-medium;
     border: 1px solid @color-light-gray;
     border-radius: @border-radius-medium;
     height: 100%;
     min-height: 500px;
+}
+
+.editor-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: @gap-medium;
+    padding-bottom: @gap-medium;
+    border-bottom: 1px solid @color-light-slate;
+
+    &__group {
+        display: flex;
+        gap: 4px;
+
+        &:not(:last-child) {
+            padding-right: @gap-medium;
+            border-right: 1px solid @color-light-slate;
+        }
+    }
+
+    &__btn {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        line-height: 1;
+        color: @color-black;
+        background: @color-white;
+        border: 1px solid @color-light-gray;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.15s, border-color 0.15s, color 0.15s;
+
+        &:hover:not(:disabled) {
+            border-color: @color-primary;
+            color: @color-primary;
+        }
+
+        &.is-active {
+            background: @color-primary;
+            border-color: @color-primary;
+            color: @color-white;
+        }
+
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    }
+}
+
+.editor-content {
+    flex: 1;
+
+    .ProseMirror {
+        min-height: 420px;
+        outline: none;
+        line-height: 1.6;
+        color: @color-black;
+
+        > * + * {
+            margin-top: 0.75em;
+        }
+
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 1.25em;
+            font-weight: 600;
+        }
+
+        ul,
+        ol {
+            padding-left: 1.5em;
+        }
+
+        blockquote {
+            padding-left: 1em;
+            border-left: 3px solid @color-light-gray;
+            color: @color-gray;
+        }
+
+        pre {
+            padding: 12px 16px;
+            background: @color-light-slate;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        code {
+            font-family: 'Courier New', monospace;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid @color-light-gray;
+        }
+    }
 }
 
 .css-10ltm04-MuiToolbar-root {

@@ -1,5 +1,6 @@
 import { apiFetch } from '../hooks/fetch';
 import { getKeycloak } from '../lib/keycloak';
+import { getSelectedOrganizationId } from '../lib/organizationStorage';
 import { API_BASE_URL } from '../config/api.config';
 import { MessageResponse } from './dto/common.dto';
 import {
@@ -76,18 +77,74 @@ export function restoreDocument(id: string): Promise<MessageResponse> {
 }
 
 /**
- * Скачивание файла. Идёт отдельным fetch'ем (не через apiFetch),
- * т.к. ответ — бинарный blob, а не JSON.
+ * Заголовки для бинарных запросов (скачивание/просмотр), которые идут мимо
+ * apiFetch: Bearer-токен + обязательный X-Organization-Id.
  */
-export async function downloadDocument(id: string, filename: string): Promise<void> {
+async function buildBinaryRequestHeaders(): Promise<Record<string, string>> {
     const keycloak = getKeycloak();
 
     if (keycloak.authenticated) {
         await keycloak.updateToken(30);
     }
 
+    const headers: Record<string, string> = {};
+
+    if (keycloak.token) {
+        headers.Authorization = `Bearer ${keycloak.token}`;
+    }
+
+    const organizationId = getSelectedOrganizationId();
+    if (organizationId) {
+        headers['X-Organization-Id'] = organizationId;
+    }
+
+    return headers;
+}
+
+export interface DocumentContent {
+    /** Object URL содержимого (для <iframe>/<img>). Не забыть revokeObjectURL. */
+    url: string;
+    /** MIME-тип содержимого. */
+    contentType: string;
+    /** Размер в байтах (если отдан сервером). */
+    size: number;
+}
+
+/**
+ * Содержимое документа как object URL — для предпросмотра на странице документа.
+ * Тянет тот же /download, но возвращает blob-URL вместо инициирования скачивания.
+ */
+export async function fetchDocumentContent(id: string): Promise<DocumentContent> {
+    const headers = await buildBinaryRequestHeaders();
+
     const response = await fetch(`${API_BASE_URL}/api/v1/documents/${id}/download`, {
-        headers: keycloak.token ? { Authorization: `Bearer ${keycloak.token}` } : {},
+        headers,
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    const contentType =
+        response.headers.get('Content-Type') || blob.type || 'application/octet-stream';
+
+    return {
+        url: URL.createObjectURL(blob),
+        contentType,
+        size: blob.size,
+    };
+}
+
+/**
+ * Скачивание файла. Идёт отдельным fetch'ем (не через apiFetch),
+ * т.к. ответ — бинарный blob, а не JSON.
+ */
+export async function downloadDocument(id: string, filename: string): Promise<void> {
+    const headers = await buildBinaryRequestHeaders();
+
+    const response = await fetch(`${API_BASE_URL}/api/v1/documents/${id}/download`, {
+        headers,
     });
 
     if (!response.ok) {

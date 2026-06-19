@@ -53,6 +53,8 @@ export default function DocumentsDataTable({
         } finally {
             setLoading(false);
         }
+        // reloadToken в зависимостях намеренно — для принудительного перезапроса списка.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page, sortField, sortDirection, search, reloadToken]);
 
     useEffect(() => {
@@ -106,7 +108,9 @@ export default function DocumentsDataTable({
             dataIndex: 'name',
             sorter: true,
             render: (text: string, record) => (
-                <Link to={`/documents/${record.id}`}>{text}</Link>
+                <Link to={`/documents/${record.id}`} state={{ document: record }}>
+                    {text}
+                </Link>
             ),
         },
         {

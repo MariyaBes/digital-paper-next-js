@@ -139,6 +139,11 @@ main {
   justify-content: center;
   align-items: center;
 }
+.block-logo {
+  object-fit: contain;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
 .block-content {
   display: block;
   width: 100%;

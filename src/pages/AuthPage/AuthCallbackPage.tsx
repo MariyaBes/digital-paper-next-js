@@ -25,6 +25,8 @@ export default function AuthCallbackPage() {
         }
 
         if (authenticated) {
+            // Ведём на /documents: guard в DashboardLayout сам отправит на выбор
+            // организации (/all-company), если она ещё не выбрана.
             navigate('/documents', { replace: true });
             return;
         }
