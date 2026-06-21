@@ -41,6 +41,8 @@ export interface DataType {
     status: DocumentStatus;
     responsible: string;
     createdBy: string;
+    /** Идентификатор автора документа (для проверки прав на удаление). */
+    createdById: string;
     createdDate: string;
     updatedDate: string;
 }

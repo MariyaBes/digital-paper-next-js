@@ -6,6 +6,8 @@ import { MessageResponse } from './dto/common.dto';
 import {
     DocumentListParams,
     DocumentResponse,
+    DocumentStatus,
+    DocumentStatusTransitionsResponse,
     DocumentType,
     DocumentsPagedListResponse,
 } from './dto/document.dto';
@@ -65,6 +67,136 @@ export function deleteDocument(id: string): Promise<MessageResponse> {
     return apiFetch<MessageResponse>({
         url: `/api/v1/documents/${id}/delete`,
         method: 'POST',
+    });
+}
+
+/** Доступные переходы статуса документа (текущий + разрешённые следующие). */
+export function getStatusTransitions(
+    id: string,
+): Promise<DocumentStatusTransitionsResponse> {
+    return apiFetch<DocumentStatusTransitionsResponse>({
+        url: `/api/v1/documents/${id}/status/transitions`,
+    });
+}
+
+/** Произвольная смена статуса (PATCH /status) — если переход разрешён бизнес-процессом. */
+export function changeDocumentStatus(
+    id: string,
+    status: DocumentStatus,
+    reason?: string,
+): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { status: DocumentStatus; reason?: string }>({
+        url: `/api/v1/documents/${id}/status`,
+        method: 'PATCH',
+        body: { status, reason },
+    });
+}
+
+/** Взять документ в работу: статус → IN_PROGRESS. */
+export function startDocument(id: string, reason?: string): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason?: string }>({
+        url: `/api/v1/documents/${id}/start`,
+        method: 'POST',
+        body: reason ? { reason } : undefined,
+    });
+}
+
+/** Отправить документ на проверку: статус → PENDING_REVIEW. */
+export function submitDocumentForReview(
+    id: string,
+    reason?: string,
+): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason?: string }>({
+        url: `/api/v1/documents/${id}/submit-review`,
+        method: 'POST',
+        body: reason ? { reason } : undefined,
+    });
+}
+
+/** Запросить правки (только для директора): статус → CHANGES_REQUESTED. Причина обязательна. */
+export function requestDocumentChanges(
+    id: string,
+    reason: string,
+): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason: string }>({
+        url: `/api/v1/documents/${id}/request-changes`,
+        method: 'POST',
+        body: { reason },
+    });
+}
+
+/** Подписать документ: статус → SIGNED. */
+export function signDocument(id: string, reason?: string): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason?: string }>({
+        url: `/api/v1/documents/${id}/sign`,
+        method: 'POST',
+        body: reason ? { reason } : undefined,
+    });
+}
+
+/** Завершить документ: статус → DONE. */
+export function completeDocument(
+    id: string,
+    reason?: string,
+): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason?: string }>({
+        url: `/api/v1/documents/${id}/complete`,
+        method: 'POST',
+        body: reason ? { reason } : undefined,
+    });
+}
+
+/** Отменить документ: статус → CANCELLED. Причина обязательна. */
+export function cancelDocument(id: string, reason: string): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason: string }>({
+        url: `/api/v1/documents/${id}/cancel`,
+        method: 'POST',
+        body: { reason },
+    });
+}
+
+/** Пометить документ просроченным (только для директора): статус → EXPIRED. */
+export function expireDocument(id: string, reason?: string): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason?: string }>({
+        url: `/api/v1/documents/${id}/expire`,
+        method: 'POST',
+        body: reason ? { reason } : undefined,
+    });
+}
+
+/** Назначить ответственного за документ (владелец/автор/текущий ответственный). */
+export function assignResponsible(
+    id: string,
+    userId: string,
+): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { userId: string }>({
+        url: `/api/v1/documents/${id}/responsible`,
+        method: 'PATCH',
+        body: { userId },
+    });
+}
+
+/** Утвердить документ (только для директора): статус → APPROVED. */
+export function approveDocument(
+    id: string,
+    reason?: string,
+): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason?: string }>({
+        url: `/api/v1/documents/${id}/approve`,
+        method: 'POST',
+        body: reason ? { reason } : undefined,
+    });
+}
+
+/** Отклонить документ (только для директора): статус → REJECTED. Причина обязательна. */
+export function rejectDocument(
+    id: string,
+    reason: string,
+): Promise<DocumentResponse> {
+    return apiFetch<DocumentResponse, { reason: string }>({
+        url: `/api/v1/documents/${id}/reject`,
+        method: 'POST',
+        body: { reason },
     });
 }
 
@@ -134,6 +266,27 @@ export async function fetchDocumentContent(id: string): Promise<DocumentContent>
         contentType,
         size: blob.size,
     };
+}
+
+/**
+ * PDF-предпросмотр документа (бэкенд конвертирует .docx → PDF через LibreOffice).
+ * Возвращает object URL PDF-блоба — для встраивания в <iframe>.
+ * Не забыть revokeObjectURL после использования.
+ */
+export async function fetchDocumentPdfPreview(id: string): Promise<string> {
+    const headers = await buildBinaryRequestHeaders();
+
+    const response = await fetch(
+        `${API_BASE_URL}/api/v1/documents/${id}/preview/pdf`,
+        { headers },
+    );
+
+    if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
 }
 
 /**

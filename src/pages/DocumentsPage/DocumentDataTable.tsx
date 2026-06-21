@@ -10,6 +10,8 @@ import { useModalLogic } from '../../hooks/useModalHook';
 import * as documentsApi from '../../api/documents';
 import { DataType, documentStatusLabels } from '../../types/document.types';
 import { SortDirection } from '../../api/dto/common.dto';
+import { useRole } from '../../context/RoleContext';
+import { useUser } from '../../context/UserContext';
 import { notify, notifyError } from '../../lib/notify';
 import { SORT_FIELD_MAP, STATUS_COLORS, toRow } from './documentRow';
 
@@ -24,12 +26,24 @@ export default function DocumentsDataTable({
     search = '',
     reloadToken = 0,
 }: DocumentsDataTableProps) {
+    const { isDirector } = useRole();
+    const { profile } = useUser();
+    const currentUserId = profile?.id ?? null;
+
     const [data, setData] = useState<DataType[]>([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(1);
     const [total, setTotal] = useState(0);
     const [sortField, setSortField] = useState('createdAt');
     const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
+
+    // Удалять можно: директор — любой документ, сотрудник — только свой.
+    const canDelete = (record: DataType) =>
+        isDirector || (currentUserId != null && record.createdById === currentUserId);
+
+    // Утвердить может только директор и только документ, ожидающий проверки.
+    const canApprove = (record: DataType) =>
+        isDirector && record.status === 'PENDING_REVIEW';
 
     const { showModal, showOverflow, selectedDoc, openModal, closeModal } =
         useModalLogic<DataType>();
@@ -81,6 +95,16 @@ export default function DocumentsDataTable({
             fetchData();
         } catch (e) {
             notifyError(e, 'Не удалось удалить документ');
+        }
+    };
+
+    const handleApprove = async (record: DataType) => {
+        try {
+            await documentsApi.approveDocument(record.id);
+            notify.success('Документ утверждён');
+            fetchData();
+        } catch (e) {
+            notifyError(e, 'Не удалось утвердить документ');
         }
     };
 
@@ -153,35 +177,50 @@ export default function DocumentsDataTable({
         {
             dataIndex: 'more',
             width: 48,
-            render: (_text, record) => (
-                <Dropdown
-                    trigger={['click']}
-                    menu={{
-                        items: [
-                            {
-                                key: 'info',
-                                label: 'Информация о файле',
-                                onClick: () => openModal(record, null),
-                            },
-                            {
-                                key: 'download',
-                                label: 'Скачать',
-                                onClick: () => handleDownload(record),
-                            },
-                            {
-                                key: 'trash',
-                                label: 'В корзину',
-                                danger: true,
-                                onClick: () => handleDelete(record),
-                            },
-                        ],
-                    }}
-                >
-                    <button className="document-icon" type="button">
-                        <EllipsisIcon className="more" />
-                    </button>
-                </Dropdown>
-            ),
+            render: (_text, record) => {
+                const items: {
+                    key: string;
+                    label: string;
+                    danger?: boolean;
+                    onClick: () => void;
+                }[] = [
+                    {
+                        key: 'info',
+                        label: 'Информация о файле',
+                        onClick: () => openModal(record, null),
+                    },
+                    {
+                        key: 'download',
+                        label: 'Скачать',
+                        onClick: () => handleDownload(record),
+                    },
+                ];
+
+                if (canApprove(record)) {
+                    items.push({
+                        key: 'approve',
+                        label: 'Утвердить',
+                        onClick: () => handleApprove(record),
+                    });
+                }
+
+                if (canDelete(record)) {
+                    items.push({
+                        key: 'trash',
+                        label: 'В корзину',
+                        danger: true,
+                        onClick: () => handleDelete(record),
+                    });
+                }
+
+                return (
+                    <Dropdown trigger={['click']} menu={{ items }}>
+                        <button className="document-icon" type="button">
+                            <EllipsisIcon className="more" />
+                        </button>
+                    </Dropdown>
+                );
+            },
         },
     ];
 

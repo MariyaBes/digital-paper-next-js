@@ -52,6 +52,10 @@ export default function DashboardLayout() {
             return 'Просмотр документа';
         }
 
+        if (pathName.startsWith('/template/')) {
+            return 'Конструктор документа';
+        }
+
         if (pathName === '/template') {
             return 'Шаблоны';
         }
@@ -76,7 +80,7 @@ export default function DashboardLayout() {
             return 'Выбор организации';
         }
 
-        return 'DigitalPaper';
+        return 'ДокОборот';
     }, [location.pathname]);
 
     useEffect(() => {

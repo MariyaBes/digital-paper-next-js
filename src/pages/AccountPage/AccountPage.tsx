@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Form, Input, Spin } from 'antd';
 
 import { ReactComponent as UploadIcon } from '../../assets/icons/solar_upload-linear.svg';
+import { ReactComponent as UserIcon } from '../../assets/icons/tabler_user.svg';
 import placeholderAvatar from '../../assets/icons/Avatar.svg';
 import InputUpload from '../../components/ui/Inputs/InputUpload';
 import ButtonPrimary from '../../components/ui/Buttons/ButtonPrimary';
@@ -92,40 +93,58 @@ export default function AccountPage() {
 
     return (
         <Spin spinning={loading && !profile}>
-            <div className="profile content-flex-column">
-                <span className="profile-name">{fullName || profile?.email}</span>
+            <div className="pf content-flex-column">
+                <section className="pf-hero">
+                    <div className="pf-hero__cover" />
 
-                <div className="profile-block">
-                    <div className="profile-block-item left">
-                        <img
-                            src={profile?.avatarUrl || placeholderAvatar}
-                            alt="Аватар пользователя"
-                            width={120}
-                            height={120}
-                            style={{ borderRadius: 100, objectFit: 'cover' }}
-                            onError={(e) => {
-                                if (e.currentTarget.src !== placeholderAvatar) {
-                                    e.currentTarget.src = placeholderAvatar;
-                                }
-                            }}
-                        />
+                    <div className="pf-hero__body">
+                        <div className={`pf-avatar${uploading ? ' pf-avatar--uploading' : ''}`}>
+                            <img
+                                className="pf-avatar__img"
+                                src={profile?.avatarUrl || placeholderAvatar}
+                                alt="Аватар пользователя"
+                                onError={(e) => {
+                                    if (e.currentTarget.src !== placeholderAvatar) {
+                                        e.currentTarget.src = placeholderAvatar;
+                                    }
+                                }}
+                            />
 
-                        <InputUpload name="avatar" role="button" onSubmit={handleAvatarUpload}>
-                            <UploadIcon />
-                            {uploading ? 'Загрузка…' : 'Загрузить файл'}
-                        </InputUpload>
+                            <InputUpload name="avatar" role="button" onSubmit={handleAvatarUpload}>
+                                <UploadIcon />
+                            </InputUpload>
+                        </div>
 
-                        <div className="user-info__email form-emeil">{profile?.email}</div>
+                        <div className="pf-hero__meta">
+                            <h1 className="pf-hero__name">{fullName || profile?.email}</h1>
+                            {fullName && profile?.email && (
+                                <span className="pf-hero__email">{profile.email}</span>
+                            )}
+                        </div>
                     </div>
+                </section>
 
-                    <div className="profile-block-item right">
-                        <Form
-                            form={form}
-                            name="account"
-                            layout="vertical"
-                            style={{ width: '100%' }}
-                            scrollToFirstError
-                        >
+                <section className="pf-card">
+                    <header className="pf-card__head">
+                        <span className="pf-card__icon">
+                            <UserIcon />
+                        </span>
+                        <div>
+                            <h2 className="pf-card__title">Личные данные</h2>
+                            <p className="pf-card__sub">
+                                Эти данные отображаются в ваших документах и профиле
+                            </p>
+                        </div>
+                    </header>
+
+                    <Form
+                        form={form}
+                        name="account"
+                        layout="vertical"
+                        style={{ width: '100%' }}
+                        scrollToFirstError
+                    >
+                        <div className="pf-grid">
                             <Form.Item
                                 name="lastName"
                                 label="Фамилия"
@@ -137,7 +156,7 @@ export default function AccountPage() {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="Иванов" />
                             </Form.Item>
 
                             <Form.Item
@@ -151,23 +170,25 @@ export default function AccountPage() {
                                     },
                                 ]}
                             >
-                                <Input />
+                                <Input placeholder="Иван" />
                             </Form.Item>
 
                             <Form.Item name="middleName" label="Отчество">
-                                <Input />
+                                <Input placeholder="Иванович" />
                             </Form.Item>
 
                             <Form.Item name="birthday" label="Дата рождения">
                                 <Input type="date" />
                             </Form.Item>
+                        </div>
 
+                        <div className="pf-actions pf-actions--top">
                             <ButtonPrimary onClick={onSubmit} disabled={submitting}>
-                                Сохранить изменения
+                                {submitting ? 'Сохранение…' : 'Сохранить изменения'}
                             </ButtonPrimary>
-                        </Form>
-                    </div>
-                </div>
+                        </div>
+                    </Form>
+                </section>
             </div>
         </Spin>
     );

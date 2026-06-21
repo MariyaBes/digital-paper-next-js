@@ -144,7 +144,7 @@ main {
   display: flex;
   width: 100%;
   flex-direction: column;
-  gap: 24px;
+  gap: 12px;
   padding-bottom: 48px;
 }
 .link-list__item {
@@ -169,13 +169,20 @@ main {
 .link-list__item:hover path {
   stroke: #4096FF;
 }
+.link-list__item:hover .company path {
+  fill: #4096FF;
+}
 .link-list__item-icon {
   width: 24px;
   height: 24px;
 }
 .link-list__item-icon path {
-  transition: stroke ease-in-out 0.2s;
+  transition: all ease-in-out 0.2s;
   stroke: #1F1F1F;
+}
+.link-list__item-icon .company path {
+  stroke-width: 0;
+  fill: #1F1F1F;
 }
 .link-list__item-title {
   line-height: normal;

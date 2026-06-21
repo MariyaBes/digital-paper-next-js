@@ -12,11 +12,17 @@ export type DocumentType =
     | 'NONE';
 
 export type DocumentStatus =
+    | 'DRAFT'
     | 'CREATED'
     | 'IN_PROGRESS'
     | 'PENDING_REVIEW'
+    | 'CHANGES_REQUESTED'
+    | 'APPROVED'
+    | 'SIGNED'
     | 'DONE'
     | 'REJECTED'
+    | 'CANCELLED'
+    | 'EXPIRED'
     | 'DELETED';
 
 export const documentTypeLabels: Record<DocumentType, string> = {
@@ -37,17 +43,25 @@ export const documentTypeOptions = (Object.keys(documentTypeLabels) as DocumentT
     .map((value) => ({ value, label: documentTypeLabels[value] }));
 
 export const documentStatusLabels: Record<DocumentStatus, string> = {
+    DRAFT: 'Черновик',
     CREATED: 'Загружен',
     IN_PROGRESS: 'В процессе',
     PENDING_REVIEW: 'Ожидает проверки',
+    CHANGES_REQUESTED: 'Требуются правки',
+    APPROVED: 'Утверждён',
+    SIGNED: 'Подписан',
     DONE: 'Выполнено',
     REJECTED: 'Отклонён',
+    CANCELLED: 'Отменён',
+    EXPIRED: 'Просрочен',
     DELETED: 'В корзине',
 };
 
 export interface DocumentListItem {
     id: string;
     name: string;
+    /** Идентификатор автора документа (для проверки прав на удаление). */
+    createdById: string;
     responsible: string;
     status: DocumentStatus;
     contentType: string;
@@ -70,6 +84,13 @@ export interface DocumentResponse {
 export interface DocumentsPagedListResponse {
     page: PagedResponse;
     list: DocumentListItem[];
+}
+
+/** Ответ доступных переходов статуса (бэкенд DocumentStatusTransitionsResponse). */
+export interface DocumentStatusTransitionsResponse {
+    currentStatus: DocumentStatus;
+    /** Статусы, в которые документ разрешено перевести бизнес-процессом. */
+    availableStatuses: DocumentStatus[];
 }
 
 export interface DocumentListParams {

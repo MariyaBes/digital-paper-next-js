@@ -103,3 +103,70 @@
     flex-direction: row;
     justify-content: center;
 }
+
+
+//---МОДАЛКА-ФОРМА (создание организации)---
+.modal-form {
+    min-width: 0;
+    width: 100%;
+    max-width: 560px;
+    gap: @gap-standart;
+
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-outlined,
+    .ant-input-group-wrapper,
+    .ant-select { max-width: 100% !important; width: 100%; }
+
+    textarea.ant-input { min-height: 84px; }
+
+    &__close {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 100px;
+        background-color: @color-light-slate;
+        transition: all ease-in-out .2s;
+        svg { width: 16px; height: 16px; }
+        &:hover {
+            background-color: @color-hover-blue;
+            transform: rotate(90deg);
+        }
+        &:focus-visible {
+            outline: 2px solid @color-primary;
+            outline-offset: 2px;
+        }
+    }
+
+    &__head {
+        padding-right: 44px;
+    }
+
+    &__body { width: 100%; }
+
+    &__actions {
+        justify-content: flex-end;
+        gap: @gap-medium;
+        .btn-primary { min-width: 150px; }
+    }
+}
+
+@media screen and (max-width: 560px) {
+    .modal-form {
+        max-width: 92vw;
+        padding: @padding-medium;
+    }
+    .modal-form__close {
+        top: 12px;
+        right: 12px;
+    }
+    .modal-form__actions {
+        flex-direction: column-reverse;
+        .btn-primary { width: 100%; min-width: 0; }
+    }
+}

@@ -162,6 +162,9 @@ a:hover,
 .ant-dropdown-menu-title-content:hover {
   color: #4096FF;
 }
+.ant-dropdown-menu-item-danger .ant-dropdown-menu-title-content:hover {
+  color: #fff;
+}
 .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-header-text {
   font-size: 18px;
 }
@@ -288,9 +291,6 @@ a:hover,
   .ant-table-wrapper tfoot > tr > th,
   .ant-table-wrapper tfoot > tr > td {
     font-size: 16px;
-  }
-  .ant-table-wrapper .ant-table-column-title {
-    font-size: 18px;
   }
   .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-header-text {
     font-size: 20px;

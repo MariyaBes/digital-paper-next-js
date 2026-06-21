@@ -1,11 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Button, Popconfirm, Select, Table, Tag } from 'antd';
 import type { TableColumnsType, TableProps } from 'antd';
 
+import { ReactComponent as DeleteIcon } from '../../assets/icons/recycle.svg';
 import * as organizationUsersApi from '../../api/organizationUsers';
 import { useOrganization } from '../../context/OrganizationContext';
+import { useRole } from '../../context/RoleContext';
+import { useUser } from '../../context/UserContext';
 import { SortDirection } from '../../api/dto/common.dto';
-import { notifyError } from '../../lib/notify';
+import { assignableUserRoleOptions, UserRole, userRoleLabels } from '../../api/dto/user.dto';
+import { notify, notifyError } from '../../lib/notify';
 import { SORT_FIELD_MAP, toRow, UserRow } from './userRow';
 
 const PAGE_SIZE = 10;
@@ -20,7 +24,10 @@ export default function UsersDataTable({
     reloadToken = 0,
 }: UsersDataTableProps) {
     const { selectedOrganization } = useOrganization();
+    const { isDirector } = useRole();
+    const { profile } = useUser();
     const organizationId = selectedOrganization?.id ?? null;
+    const currentUserId = profile?.id ?? null;
 
     const [data, setData] = useState<UserRow[]>([]);
     const [loading, setLoading] = useState(false);
@@ -28,6 +35,10 @@ export default function UsersDataTable({
     const [total, setTotal] = useState(0);
     const [sortField, setSortField] = useState('createdAt');
     const [sortDirection, setSortDirection] = useState<SortDirection>('DESC');
+    // id пользователя, у которого сейчас меняется роль (для блокировки select'а).
+    const [savingRoleId, setSavingRoleId] = useState<string | null>(null);
+    // id пользователя, которого сейчас удаляют (для блокировки кнопки).
+    const [removingId, setRemovingId] = useState<string | null>(null);
 
     const fetchData = useCallback(async () => {
         if (!organizationId) {
@@ -68,6 +79,54 @@ export default function UsersDataTable({
         setPage(1);
     }, [search]);
 
+    const handleRoleChange = async (record: UserRow, role: UserRole) => {
+        if (!organizationId || role === record.role) {
+            return;
+        }
+
+        setSavingRoleId(record.id);
+
+        try {
+            await organizationUsersApi.changeOrganizationUserRole(
+                organizationId,
+                record.id,
+                role,
+            );
+            notify.success('Роль пользователя изменена');
+            // Локально обновляем строку, чтобы не дёргать весь список.
+            setData((rows) =>
+                rows.map((row) => (row.id === record.id ? { ...row, role } : row)),
+            );
+        } catch (e) {
+            notifyError(e, 'Не удалось изменить роль пользователя');
+        } finally {
+            setSavingRoleId(null);
+        }
+    };
+
+    const handleRemove = async (record: UserRow) => {
+        if (!organizationId) {
+            return;
+        }
+
+        setRemovingId(record.id);
+
+        try {
+            await organizationUsersApi.removeUserFromOrganization(
+                organizationId,
+                record.id,
+            );
+            notify.success('Сотрудник удалён из организации');
+            // Локально убираем строку и поправляем счётчик, чтобы не дёргать весь список.
+            setData((rows) => rows.filter((row) => row.id !== record.id));
+            setTotal((value) => Math.max(0, value - 1));
+        } catch (e) {
+            notifyError(e, 'Не удалось удалить сотрудника');
+        } finally {
+            setRemovingId(null);
+        }
+    };
+
     const handleTableChange: TableProps<UserRow>['onChange'] = (
         pagination,
         _filters,
@@ -98,6 +157,27 @@ export default function UsersDataTable({
             sorter: true,
         },
         {
+            title: 'Роль',
+            dataIndex: 'role',
+            // Директор может менять роль сотрудникам, но не может назначить роль
+            // «Директор» (OWNER) — её нет в списке. Текущий директор показывается тегом.
+            render: (role: UserRow['role'], record) =>
+                isDirector && role !== 'OWNER' ? (
+                    <Select<UserRole>
+                        size="small"
+                        style={{ minWidth: 150 }}
+                        placeholder="Выберите роль"
+                        value={role ?? undefined}
+                        options={assignableUserRoleOptions}
+                        loading={savingRoleId === record.id}
+                        disabled={savingRoleId === record.id}
+                        onChange={(value) => handleRoleChange(record, value)}
+                    />
+                ) : (
+                    <Tag>{role ? userRoleLabels[role] : '—'}</Tag>
+                ),
+        },
+        {
             title: 'Дата рождения',
             dataIndex: 'birthday',
         },
@@ -107,6 +187,40 @@ export default function UsersDataTable({
             sorter: true,
         },
     ];
+
+    // Колонка удаления — только для директора. Нельзя удалить директора (OWNER)
+    // и самого себя.
+    if (isDirector) {
+        columns.push({
+            dataIndex: 'remove',
+            width: 130,
+            render: (_text, record) => {
+                if (record.role === 'OWNER' || record.id === currentUserId) {
+                    return null;
+                }
+
+                return (
+                    <Popconfirm
+                        title="Удалить сотрудника?"
+                        description="Сотрудник потеряет доступ к организации."
+                        okText="Удалить"
+                        okButtonProps={{ danger: true }}
+                        cancelText="Отмена"
+                        onConfirm={() => handleRemove(record)}
+                    >
+                        <Button
+                            type="text"
+                            danger
+                            icon={<DeleteIcon />}
+                            loading={removingId === record.id}
+                        >
+                            Удалить
+                        </Button>
+                    </Popconfirm>
+                );
+            },
+        });
+    }
 
     return (
         <div>

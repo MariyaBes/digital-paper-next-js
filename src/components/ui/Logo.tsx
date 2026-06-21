@@ -7,7 +7,7 @@ export default function Logo() {
         <div className="logo background-image">
             <LogoThumb/>
             <span>
-                DigitalPaper
+                ДокОборот
             </span>
         </div>
     )

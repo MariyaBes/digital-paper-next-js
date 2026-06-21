@@ -302,7 +302,7 @@ path {
 }
 .header {
   display: flex;
-  gap: 64px;
+  gap: 48px;
   align-items: center;
   margin-bottom: 42px;
 }
@@ -466,7 +466,7 @@ path {
   font-size: 16px;
   position: relative;
   width: 100%;
-  min-width: 440px;
+  min-width: 420px;
 }
 .form-search .search-icon {
   cursor: pointer;
@@ -609,6 +609,7 @@ input[type="file"] {
 @media screen and (min-width: 570px) {
   .file-upload {
     width: fit-content;
+    height: auto;
   }
 }
 /*# sourceMappingURL=input.css.map */

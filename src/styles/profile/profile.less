@@ -34,10 +34,12 @@
 
 .user {
     &-avatar {
-      border-radius: 100px;
       width: 36px;
       height: 36px;
       object-fit: cover;
+      img {
+        border-radius: 100px;
+      }
     } 
     &-info {
       display: flex;
@@ -175,3 +177,274 @@
       padding: @padding-medium;
     }
   }
+
+
+//============================================================
+//  РЕДИЗАЙН ФОРМ ПРОФИЛЯ И ОРГАНИЗАЦИИ  (namespace .pf)
+//============================================================
+
+.pf {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-standart;
+    width: 100%;
+
+    // внутри редизайна инпуты тянутся на всю ширину колонки
+    .ant-input,
+    .ant-input-affix-wrapper,
+    .ant-input-outlined,
+    .ant-input-group-wrapper,
+    .ant-input-number,
+    .ant-select { max-width: 100% !important; width: 100%; }
+
+    textarea.ant-input { min-height: 96px; }
+}
+
+//---ОБЛОЖКА С АВАТАРОМ/ЛОГОТИПОМ---
+.pf-hero {
+    position: relative;
+    border: 1px solid @color-light-gray;
+    border-radius: @border-radius-small;
+    background-color: @color-white;
+    overflow: hidden;
+
+    &__cover {
+        height: 132px;
+        background: linear-gradient(135deg, @color-primary 0%, @color-second 100%);
+        position: relative;
+        &::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 18% 30%, rgba(255, 255, 255, .28) 0, transparent 42%),
+                radial-gradient(circle at 82% 12%, rgba(255, 255, 255, .20) 0, transparent 38%),
+                radial-gradient(circle at 60% 90%, rgba(255, 255, 255, .12) 0, transparent 40%);
+        }
+    }
+
+    &__body {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: @gap-medium;
+        text-align: center;
+        padding: 0 @padding-standart 26px;
+        margin-top: -50px;
+        position: relative;
+    }
+
+    &__meta {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: @gap-slim;
+    }
+
+    &__name {
+        font-size: 26px;
+        font-weight: 800;
+        line-height: 1.2;
+        color: @color-black;
+    }
+
+    &__email {
+        font-size: 15px;
+        font-weight: 400;
+        color: @color-gray;
+    }
+}
+
+//---АВАТАР С КНОПКОЙ-КАМЕРОЙ---
+.pf-avatar {
+    position: relative;
+    width: 128px;
+    height: 128px;
+    flex-shrink: 0;
+
+    &__img {
+        width: 128px;
+        height: 128px;
+        border-radius: 100px;
+        object-fit: cover;
+        background-color: @color-white;
+        border: 4px solid @color-white;
+        box-shadow: 0 6px 20px rgba(31, 31, 31, .14);
+    }
+
+    // переопределяем .file-upload (из InputUpload) под круглый бейдж
+    .file-upload {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        width: 40px;
+        height: 40px;
+        min-width: 40px;
+        padding: 0;
+        gap: 0;
+        border-radius: 100px;
+        border: 3px solid @color-white;
+        background-color: @color-primary;
+        box-shadow: 0 4px 12px rgba(64, 150, 255, .45);
+        overflow: hidden;
+        svg { width: 18px; height: 18px; }
+        svg path { stroke: @color-white; }
+    }
+
+    &--logo &__img {
+        border-radius: 26px;
+        object-fit: contain;
+        padding: 10px;
+        border-color: @color-light-slate;
+    }
+
+    &--uploading .file-upload {
+        opacity: .65;
+        pointer-events: none;
+    }
+}
+
+//---КАРТОЧКА-СЕКЦИЯ---
+.pf-card {
+    border: 1px solid @color-light-gray;
+    border-radius: @border-radius-small;
+    background-color: @color-white;
+    padding: @padding-standart;
+    display: flex;
+    flex-direction: column;
+    gap: @gap-standart;
+
+    &__head {
+        display: flex;
+        align-items: center;
+        gap: @gap-medium;
+        padding-bottom: @gap-standart;
+        border-bottom: 1px solid @color-light-slate;
+    }
+
+    &__icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 50px;
+        height: 50px;
+        min-width: 50px;
+        border-radius: 16px;
+        background-color: @color-hover-blue;
+        svg { width: 24px; height: 24px; }
+        svg path { stroke: @color-primary; }
+
+        &--emoji {
+            font-size: 26px;
+            line-height: 1;
+        }
+    }
+
+    &__title {
+        font-size: 20px;
+        font-weight: 700;
+        color: @color-black;
+        line-height: 1.2;
+    }
+
+    &__sub {
+        font-size: 14px;
+        font-weight: 400;
+        color: @color-gray;
+        margin-top: 3px;
+    }
+}
+
+//---ФОРМА (несколько секций в колонку)---
+.pf-form {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-standart;
+    width: 100%;
+}
+
+//---СЕТКА ПОЛЕЙ---
+.pf-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 @gap-standart;
+
+    .ant-form-item { margin-bottom: 18px; }
+
+    &__full { grid-column: 1 / -1; }
+}
+
+//---ЧИП/БЕЙДЖ (сфера деятельности)---
+.pf-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 16px;
+    border-radius: @border-radius-standart;
+    background-color: @color-hover-blue;
+    color: @color-second;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+}
+
+//---ПАНЕЛЬ ДЕЙСТВИЙ---
+.pf-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: @gap-standart;
+
+    .btn-primary {
+        width: fit-content;
+        min-width: 230px;
+    }
+
+    &--top {
+        padding-top: @gap-standart;
+        border-top: 1px solid @color-light-slate;
+    }
+
+    &--bar {
+        justify-content: space-between;
+        background-color: @color-white;
+        border: 1px solid @color-light-gray;
+        border-radius: @border-radius-small;
+        padding: @padding-medium @padding-standart;
+        position: sticky;
+        bottom: @padding-medium;
+        box-shadow: 0 8px 24px rgba(31, 31, 31, .06);
+    }
+
+    &__hint {
+        font-size: 14px;
+        color: @color-gray;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .pf-hero__body {
+        flex-direction: row;
+        align-items: flex-end;
+        text-align: left;
+        gap: @gap-standart;
+    }
+    .pf-hero__meta {
+        align-items: flex-start;
+        padding-bottom: 6px;
+    }
+    .pf-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media screen and (max-width: 480px) {
+    .pf-card { padding: @padding-medium; }
+    .pf-hero__body { padding: 0 @padding-medium @padding-medium; }
+    .pf-actions {
+        flex-direction: column-reverse;
+        align-items: stretch;
+        .btn-primary { width: 100%; }
+    }
+    .pf-actions--bar { padding: @padding-medium; }
+    .pf-actions__hint { text-align: center; }
+}

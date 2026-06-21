@@ -32,7 +32,8 @@ export const employeeMenuLink: MenuLink[] = [
     {
         title: 'Настройки',
         icon: <SettingIcon />,
-        path: '/setting'
+        path: '/setting',
+        directorOnly: true,
     },
     {
         title: 'Все компании',

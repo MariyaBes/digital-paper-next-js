@@ -8,6 +8,7 @@ import { ReactComponent as SuccessIcon } from '../../../assets/icons/simple-line
 import { ReactComponent as ErrorIcon } from '../../../assets/icons/lucide_info.svg';
 import {getKeycloak} from "../../../lib/keycloak";
 import {useOrganization} from "../../../context/OrganizationContext";
+import {useRole} from "../../../context/RoleContext";
 import {notify} from "../../../lib/notify";
 
 // Путь к выбору организации — единственный доступный, пока организация не выбрана.
@@ -21,11 +22,13 @@ interface MenuListProps {
 export default function MenuList({ items, collapse }: MenuListProps) {
     const location = useLocation();
     const { hasSelectedOrganization, clearOrganization } = useOrganization();
+    const { isDirector } = useRole();
 
     const pathName = location.pathname;
 
-    // Потом заменим на роль из useAuth/useUser
-    const role = localStorage.getItem('role') || 'EMPLOYEE';
+    // Пункт доступен только директору, если помечен directorOnly или role: 'OWNER'.
+    const isDirectorOnly = (item: MenuLink) =>
+        item.directorOnly === true || item.role === 'OWNER';
 
     const logout = async () => {
         try {
@@ -82,7 +85,7 @@ export default function MenuList({ items, collapse }: MenuListProps) {
         <nav className="aside-container__menu">
             <ul className="link-list lines-bottom">
                 {items
-                    .filter((item) => !item.role || item.role === role)
+                    .filter((item) => !isDirectorOnly(item) || isDirector)
                     .map((item) => {
                         const locked = isLocked(item.path);
 

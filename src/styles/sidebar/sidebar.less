@@ -53,7 +53,7 @@
     display: flex;
     width: 100%;
     flex-direction: column;
-    gap: 24px;
+    gap: 12px;
     padding-bottom: 48px;
     &__item {
       border-radius: 15px;
@@ -75,13 +75,24 @@
         path {
            stroke: @color-primary;
         }
+        .company {
+          path {
+            fill: @color-primary;
+          }
+        }
       }
       &-icon {
         width: 24px;
         height: 24px;
         path {
-          transition: stroke ease-in-out .2s;
+          transition: all ease-in-out .2s;
           stroke: @color-black;
+        }
+        .company {
+          path {
+            stroke-width: 0;
+            fill: @color-black;
+          }
         }
       }
       &-title {

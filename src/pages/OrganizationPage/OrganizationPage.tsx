@@ -6,7 +6,10 @@ import Block from '../../components/ui/Block';
 import ButtonAdd from '../../components/ui/Buttons/ButtonAdd';
 import CreateOrganizationModal from '../../components/elements/Modals/CreateOrganizationModal';
 import * as organizationsApi from '../../api/organizations';
-import { OrganizationListItem } from '../../api/dto/organization.dto';
+import {
+    OrganizationListItem,
+    organizationTypeLabels,
+} from '../../api/dto/organization.dto';
 import { useModalLogic } from '../../hooks/useModalHook';
 import { useOrganization } from '../../context/OrganizationContext';
 import { notify, notifyError } from '../../lib/notify';
@@ -52,7 +55,7 @@ export function OrganizationPage() {
     };
 
     return (
-        <div className="content-flex-column">
+        <div className="org-page content-flex-column">
             <CreateOrganizationModal
                 showModal={showModal}
                 showOverflow={showOverflow}
@@ -61,12 +64,15 @@ export function OrganizationPage() {
             />
 
             <Spin spinning={loading}>
-                <div style={{ marginBottom: 24 }}>
-                    <div className="content-header">
+                <section className="org-section">
+                    <div className="org-section__head">
                         <h2 className="header-title">Мои организации</h2>
+                        {myOrganizations.length > 0 && (
+                            <span className="org-count">{myOrganizations.length}</span>
+                        )}
                     </div>
 
-                    <div className="content-flex-column block-flex">
+                    <div className="org-grid">
                         <ButtonAdd onClick={() => openModal(null, null)} />
 
                         {myOrganizations.map((organization) => (
@@ -74,33 +80,45 @@ export function OrganizationPage() {
                                 key={organization.id}
                                 name={organization.name}
                                 logoUrl={organization.avatarUrl}
+                                meta={organizationTypeLabels[organization.type]}
                                 onClick={() => handleEnterOrganization(organization)}
                             >
                                 Перейти в организацию
                             </Block>
                         ))}
                     </div>
-                </div>
+                </section>
 
-                <div>
-                    <div className="content-header">
+                <section className="org-section">
+                    <div className="org-section__head">
                         <h2 className="header-title">Все организации</h2>
-                    </div>
-
-                    <div className="content-flex-column block-flex">
-                        {allOrganizations.length === 0 && !loading && (
-                            <p>Доступных организаций пока нет.</p>
+                        {allOrganizations.length > 0 && (
+                            <span className="org-count">{allOrganizations.length}</span>
                         )}
-
-                        {allOrganizations.map((organization) => (
-                            <Block
-                                key={organization.id}
-                                name={organization.name}
-                                logoUrl={organization.avatarUrl}
-                            />
-                        ))}
                     </div>
-                </div>
+
+                    <div className="org-grid">
+                        {allOrganizations.length === 0 && !loading ? (
+                            <div className="org-empty">
+                                <span className="org-empty__title">
+                                    Доступных организаций пока нет
+                                </span>
+                                <span className="org-empty__sub">
+                                    Создайте свою организацию, чтобы начать работу
+                                </span>
+                            </div>
+                        ) : (
+                            allOrganizations.map((organization) => (
+                                <Block
+                                    key={organization.id}
+                                    name={organization.name}
+                                    logoUrl={organization.avatarUrl}
+                                    meta={organizationTypeLabels[organization.type]}
+                                />
+                            ))
+                        )}
+                    </div>
+                </section>
             </Spin>
         </div>
     );

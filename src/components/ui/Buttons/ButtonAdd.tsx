@@ -2,11 +2,19 @@ interface ButtonAddProps {
     onClick: () => void;
 }
 
-/** Кнопка-«плитка» с плюсом для создания новой сущности (организации). */
+/** Карточка-«плитка» с плюсом для создания новой организации. */
 export default function ButtonAdd({ onClick }: ButtonAddProps) {
     return (
-        <button className="button-add" type="button" onClick={onClick} title="Создать организацию">
-            +
+        <button
+            className="org-add"
+            type="button"
+            onClick={onClick}
+            aria-label="Создать организацию"
+        >
+            <span className="org-add__icon" aria-hidden="true">
+                +
+            </span>
+            <span className="org-add__text">Создать организацию</span>
         </button>
     );
 }

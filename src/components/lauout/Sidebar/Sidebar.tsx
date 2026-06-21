@@ -69,7 +69,7 @@ export default function Sidebar({
                 }
             >
                 <header>
-                    <Link to={logoPath} title="DigitalPaper логотип">
+                    <Link to={logoPath} title="ДокОборот логотип">
                         {collapse ? (
                             <div className="logo background-image">
                                 <LogoThumb />

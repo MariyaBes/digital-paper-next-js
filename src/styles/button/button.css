@@ -302,7 +302,7 @@ path {
 }
 .header {
   display: flex;
-  gap: 64px;
+  gap: 48px;
   align-items: center;
   margin-bottom: 42px;
 }

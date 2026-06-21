@@ -1,0 +1,133 @@
+@import "../base.less";
+
+//============================================================
+//  ПРАВЫЙ RAIL «СВОДКА» (виджет дней рождения)
+//============================================================
+
+//---РАСКЛАДКА: КОНТЕНТ + RAIL---
+.page-rail {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: @gap-standart;
+    width: 100%;
+    align-items: start;
+
+    // min-width: 0 даёт таблицам корректно сжиматься внутри grid-колонки.
+    &__main {
+        min-width: 0;
+    }
+}
+
+.srl {
+    display: flex;
+    flex-direction: column;
+    gap: @gap-standart;
+    width: 100%;
+}
+
+// На широких экранах rail встаёт справа фиксированной колонкой.
+@media screen and (min-width: 992px) {
+    .page-rail {
+        grid-template-columns: minmax(0, 1fr) 320px;
+    }
+
+    // Rail «прилипает» при скролле длинного контента.
+    .srl {
+        position: sticky;
+        top: @padding-medium;
+    }
+}
+
+//---КАРТОЧКА СВОДКИ---
+.srl-card {
+    padding: @padding-medium;
+    gap: @gap-medium;
+
+    .pf-card__head {
+        padding-bottom: @gap-medium;
+    }
+}
+
+.srl-empty {
+    padding: @gap-medium 4px;
+    color: @color-gray;
+    font-size: 14px;
+}
+
+//---СПИСОК ИМЕНИННИКОВ---
+.srl-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.srl-item {
+    display: flex;
+    align-items: center;
+    gap: @gap-medium;
+    padding: 8px 8px;
+    border-radius: @border-radius-small;
+    transition: background-color ease-in-out .2s;
+    &:hover { background-color: @color-hover-blue; }
+
+    &__main {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+        flex: 1;
+    }
+
+    &__name {
+        font-size: 14px;
+        font-weight: 600;
+        color: @color-black;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    &__date {
+        font-size: 12px;
+        color: @color-gray;
+    }
+}
+
+.srl-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    min-width: 38px;
+    border-radius: 100px;
+    background: linear-gradient(135deg, @color-primary 0%, @color-second 100%);
+    color: @color-white;
+    font-size: 13px;
+    font-weight: 700;
+
+    &--img {
+        object-fit: cover;
+        background: @color-light-slate;
+    }
+}
+
+.srl-badge {
+    flex-shrink: 0;
+    padding: 3px 10px;
+    border-radius: @border-radius-standart;
+    background-color: @color-light-slate;
+    color: @color-gray;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
+
+    &--soon {
+        background-color: @color-hover-blue;
+        color: @color-second;
+    }
+    &--today {
+        background-color: @color-primary;
+        color: @color-white;
+    }
+}

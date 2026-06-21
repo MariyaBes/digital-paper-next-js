@@ -77,10 +77,16 @@ export interface OrganizationListItem {
 export interface OrganizationResponse {
     id: string;
     name: string;
+    fullName: string;
     description: string | null;
     phone: string | null;
     email: string | null;
     industry: Industry;
+    type: OrganizationType;
+    regNumber: string | null;
+    identificationNumber: string | null;
+    regReasonCode: string | null;
+    address: string | null;
     status: ModerationStatus;
     createdAt: string;
     updatedAt: string;

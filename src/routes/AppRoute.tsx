@@ -14,6 +14,8 @@ import {OrganizationPage} from "../pages/OrganizationPage/OrganizationPage";
 import OrganizationUsersPage from "../pages/OrganizationUsersPage/OrganizationUsersPage";
 import AccountPage from "../pages/AccountPage/AccountPage";
 import SettingPage from "../pages/SettingPage/SettingPage";
+import TemplatesPage from "../pages/TemplatesPage/TemplatesPage";
+import TemplateConstructorPage from "../pages/TemplatesPage/TemplateConstructorPage";
 
 
 export default function AppRoute() {
@@ -40,6 +42,8 @@ export default function AppRoute() {
                         <Route path="/recycle" element={<RecyclePage />} />
                         <Route path="/all-company" element={<OrganizationPage/>} />
                         <Route path="/users" element={<OrganizationUsersPage />} />
+                        <Route path="/template" element={<TemplatesPage />} />
+                        <Route path="/template/:id" element={<TemplateConstructorPage />} />
                         <Route path="/account" element={<AccountPage />} />
                         <Route path="/setting" element={<SettingPage />} />
                     </Route>

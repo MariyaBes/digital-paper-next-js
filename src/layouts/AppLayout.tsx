@@ -3,6 +3,7 @@ import {ReactNode, useEffect} from "react";
 import {AuthProvider} from "../context/AuthContext";
 import {OrganizationProvider} from "../context/OrganizationContext";
 import {UserProvider} from "../context/UserContext";
+import {RoleProvider} from "../context/RoleContext";
 
 type AppLayoutProps = {
     children: ReactNode;
@@ -10,13 +11,15 @@ type AppLayoutProps = {
 
 export default function AppLayout({ children }: AppLayoutProps) {
     useEffect(() => {
-        document.title = "DigitalPaper";
+        document.title = "ДокОборот";
     }, []);
 
     return (
         <AuthProvider>
             <UserProvider>
-                <OrganizationProvider>{children}</OrganizationProvider>
+                <OrganizationProvider>
+                    <RoleProvider>{children}</RoleProvider>
+                </OrganizationProvider>
             </UserProvider>
         </AuthProvider>
     );

@@ -1,19 +1,28 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import { Spin } from 'antd';
-import mammoth from 'mammoth/mammoth.browser';
 
-import { documentTypeLabels, DataType } from '../../types/document.types';
+import { documentTypeLabels, documentStatusLabels, DataType, DocumentStatus } from '../../types/document.types';
 import * as documentsApi from '../../api/documents';
 import { DocumentContent } from '../../api/documents';
 import ButtonPrimary from '../../components/ui/Buttons/ButtonPrimary';
+import DocumentStatusActions from './DocumentStatusActions';
+import DocumentResponsibleControl from './DocumentResponsibleControl';
 import { notifyError } from '../../lib/notify';
 
 const DOCX_MIME =
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+const DOC_MIME = 'application/msword';
 
-function isDocx(contentType: string, name?: string): boolean {
-    return contentType === DOCX_MIME || (name ?? '').toLowerCase().endsWith('.docx');
+/** Word-документ (.docx/.doc) — рендерим через серверный PDF-предпросмотр. */
+function isWord(contentType: string, name?: string): boolean {
+    const lower = (name ?? '').toLowerCase();
+    return (
+        contentType === DOCX_MIME ||
+        contentType === DOC_MIME ||
+        lower.endsWith('.docx') ||
+        lower.endsWith('.doc')
+    );
 }
 
 export default function ViewDocumentPage() {
@@ -24,13 +33,19 @@ export default function ViewDocumentPage() {
     // (отдельного эндпоинта деталей документа на бэкенде пока нет).
     const stateDoc = (location.state as { document?: DataType } | null)?.document;
 
+    // Локальный статус: стартует из router state, далее синхронизируется
+    // компонентом действий (он же подтягивает актуальный статус с бэкенда).
+    const [status, setStatus] = useState<DocumentStatus | undefined>(stateDoc?.status);
+
     const [content, setContent] = useState<DocumentContent | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
 
-    // Отрендеренный HTML для .docx (через mammoth).
-    const [docxHtml, setDocxHtml] = useState<string | null>(null);
-    const [docxLoading, setDocxLoading] = useState(false);
+    // PDF-предпросмотр Word-документа (бэкенд конвертирует .docx/.doc → PDF
+    // через LibreOffice — оформление текста сохраняется, в отличие от mammoth).
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+    const [pdfLoading, setPdfLoading] = useState(false);
+    const [pdfError, setPdfError] = useState(false);
 
     useEffect(() => {
         if (!id) {
@@ -42,7 +57,6 @@ export default function ViewDocumentPage() {
 
         setLoading(true);
         setError(false);
-        setDocxHtml(null);
 
         documentsApi
             .fetchDocumentContent(id)
@@ -74,32 +88,43 @@ export default function ViewDocumentPage() {
         };
     }, [id]);
 
-    // Конвертация .docx → HTML, когда содержимое загружено.
+    // Word-документ → тянем серверный PDF-предпросмотр, когда содержимое
+    // загружено (по contentType/имени поняли, что это .docx/.doc).
     useEffect(() => {
-        if (!content || !isDocx(content.contentType, stateDoc?.name)) {
+        if (!id || !content || !isWord(content.contentType, stateDoc?.name)) {
             return;
         }
 
         let active = true;
-        setDocxLoading(true);
+        let objectUrl: string | null = null;
+        setPdfLoading(true);
+        setPdfError(false);
+        setPdfUrl(null);
 
-        fetch(content.url)
-            .then((response) => response.arrayBuffer())
-            .then((arrayBuffer) => mammoth.convertToHtml({ arrayBuffer }))
-            .then((result) => {
-                if (active) setDocxHtml(result.value);
+        documentsApi
+            .fetchDocumentPdfPreview(id)
+            .then((url) => {
+                objectUrl = url;
+                if (!active) {
+                    URL.revokeObjectURL(url);
+                    return;
+                }
+                setPdfUrl(url);
             })
-            .catch((e) => {
-                if (active) notifyError(e, 'Не удалось отобразить содержимое документа');
+            .catch(() => {
+                if (active) setPdfError(true);
             })
             .finally(() => {
-                if (active) setDocxLoading(false);
+                if (active) setPdfLoading(false);
             });
 
         return () => {
             active = false;
+            if (objectUrl) {
+                URL.revokeObjectURL(objectUrl);
+            }
         };
-    }, [content, stateDoc?.name]);
+    }, [id, content, stateDoc?.name]);
 
     const handleDownload = async () => {
         if (!id) {
@@ -128,8 +153,8 @@ export default function ViewDocumentPage() {
 
         const { contentType, url } = content;
 
-        if (isDocx(contentType, stateDoc?.name)) {
-            if (docxLoading) {
+        if (isWord(contentType, stateDoc?.name)) {
+            if (pdfLoading) {
                 return (
                     <div style={{ display: 'flex', justifyContent: 'center', padding: 48 }}>
                         <Spin size="large" />
@@ -137,24 +162,33 @@ export default function ViewDocumentPage() {
                 );
             }
 
-            if (docxHtml !== null) {
+            if (pdfUrl) {
                 return (
-                    <div
-                        className="docx-content"
+                    <iframe
+                        title={stateDoc?.name ?? 'Документ'}
+                        src={`${pdfUrl}#view=FitH`}
                         style={{
-                            background: '#fff',
+                            width: '100%',
+                            height: '80vh',
                             border: '1px solid #D1D5DB',
                             borderRadius: 15,
-                            padding: 32,
-                            maxWidth: 900,
-                            overflowX: 'auto',
-                            lineHeight: 1.6,
+                            background: '#fff',
                         }}
-                        // mammoth отдаёт безопасный семантический HTML из .docx.
-                        dangerouslySetInnerHTML={{ __html: docxHtml }}
                     />
                 );
             }
+
+            // PDF не построился — даём скачать исходник.
+            if (pdfError) {
+                return (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: 16, alignItems: 'flex-start' }}>
+                        <p>Не удалось построить предпросмотр документа.</p>
+                        <ButtonPrimary onClick={handleDownload}>Скачать документ</ButtonPrimary>
+                    </div>
+                );
+            }
+
+            return null;
         }
 
         if (contentType.startsWith('image/')) {
@@ -199,10 +233,24 @@ export default function ViewDocumentPage() {
                     </h4>
                 )}
 
-                {stateDoc?.responsible && (
+                {id && (
+                    <DocumentResponsibleControl
+                        documentId={id}
+                        createdById={stateDoc?.createdById}
+                        currentResponsible={stateDoc?.responsible}
+                    />
+                )}
+
+                {status && (
                     <h4 className="container-info__type">
-                        <strong>Ответственный:</strong> {stateDoc.responsible}
+                        <strong>Статус:</strong> {documentStatusLabels[status] ?? status}
                     </h4>
+                )}
+
+                {id && (
+                    <div style={{ marginTop: 16 }}>
+                        <DocumentStatusActions documentId={id} onStatusChange={setStatus} />
+                    </div>
                 )}
             </div>
 

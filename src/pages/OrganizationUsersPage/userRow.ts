@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { UserListItem } from '../../api/dto/user.dto';
+import { UserListItem, UserRole } from '../../api/dto/user.dto';
 
 /** Строка таблицы пользователей организации. */
 export interface UserRow {
@@ -8,6 +8,8 @@ export interface UserRow {
     /** ФИО одной строкой (Фамилия Имя Отчество). */
     fullName: string;
     email: string;
+    /** Роль в организации (или null). */
+    role: UserRole | null;
     /** Дата рождения в формате dd.MM.yyyy или «—». */
     birthday: string;
     /** Дата добавления в формате dd.MM.yyyy HH:mm. */
@@ -37,6 +39,7 @@ export function toRow(item: UserListItem): UserRow {
         id: item.id,
         fullName: fullName || '—',
         email: item.email,
+        role: item.role,
         birthday: item.birthday ? formatValue(item.birthday, 'dd.MM.yyyy') : '—',
         createdDate: formatValue(item.createdAt, 'dd.MM.yyyy HH:mm'),
     };

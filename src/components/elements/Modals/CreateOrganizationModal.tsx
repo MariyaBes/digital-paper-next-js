@@ -2,6 +2,7 @@ import { Form, Input, Select } from 'antd';
 import { useState } from 'react';
 
 import { ReactComponent as CloseIcon } from '../../../assets/icons/iconamoon_close-duotone.svg';
+import { ReactComponent as UsersIcon } from '../../../assets/icons/tabler_users.svg';
 import ButtonPrimary from '../../ui/Buttons/ButtonPrimary';
 import * as organizationsApi from '../../../api/organizations';
 import {
@@ -80,24 +81,48 @@ export default function CreateOrganizationModal({
         <>
             <div className="overflow" onClick={handleClose} id="overflow" />
 
-            <div className="modal-info">
-                <div className="modal-info__close" onClick={handleClose}>
+            <div
+                className="modal-info modal-form"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="create-org-title"
+            >
+                <button
+                    type="button"
+                    className="modal-form__close"
+                    onClick={handleClose}
+                    aria-label="Закрыть окно"
+                >
                     <CloseIcon />
-                </div>
+                </button>
 
-                <div className="modal-info__content">
-                    <h2 className="header-title">Создание организации</h2>
+                <header className="pf-card__head modal-form__head">
+                    <span className="pf-card__icon">
+                        <UsersIcon />
+                    </span>
+                    <div>
+                        <h2 id="create-org-title" className="pf-card__title">
+                            Создание организации
+                        </h2>
+                        <p className="pf-card__sub">
+                            Заполните основные данные — реквизиты добавите позже в настройках
+                        </p>
+                    </div>
+                </header>
 
-                    <Form
-                        form={form}
-                        name="create-organization"
-                        onFinish={onSubmit}
-                        layout="vertical"
-                        scrollToFirstError
-                    >
+                <Form
+                    form={form}
+                    name="create-organization"
+                    onFinish={onSubmit}
+                    layout="vertical"
+                    className="modal-form__body"
+                    scrollToFirstError
+                >
+                    <div className="pf-grid">
                         <Form.Item
+                            className="pf-grid__full"
                             name="name"
-                            label="Введите название организации"
+                            label="Название организации"
                             rules={[
                                 {
                                     required: true,
@@ -106,20 +131,28 @@ export default function CreateOrganizationModal({
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input placeholder="ООО «Ромашка»" />
                         </Form.Item>
 
-                        <Form.Item name="description" label="Описание организации">
-                            <Input.TextArea showCount maxLength={100} />
+                        <Form.Item
+                            className="pf-grid__full"
+                            name="description"
+                            label="Описание организации"
+                        >
+                            <Input.TextArea
+                                showCount
+                                maxLength={100}
+                                placeholder="Чем занимается организация"
+                            />
                         </Form.Item>
 
-                        <Form.Item name="phone" label="Введите номер телефона">
+                        <Form.Item name="phone" label="Номер телефона">
                             <Input addonBefore="+7" style={{ width: '100%' }} />
                         </Form.Item>
 
                         <Form.Item
                             name="email"
-                            label="Введите email"
+                            label="Email"
                             rules={[
                                 {
                                     type: 'email',
@@ -127,12 +160,13 @@ export default function CreateOrganizationModal({
                                 },
                             ]}
                         >
-                            <Input />
+                            <Input placeholder="info@romashka.ru" />
                         </Form.Item>
 
                         <Form.Item
+                            className="pf-grid__full"
                             name="industry"
-                            label="Выберите сферу деятельности"
+                            label="Сфера деятельности"
                             rules={[
                                 {
                                     required: true,
@@ -142,13 +176,21 @@ export default function CreateOrganizationModal({
                         >
                             <Select placeholder="Выберите сферу" options={industryOptions} />
                         </Form.Item>
-                    </Form>
-
-                    <div className="modal-info__actions">
-                        <ButtonPrimary onClick={onSubmit} disabled={submitting}>
-                            Создать
-                        </ButtonPrimary>
                     </div>
+                </Form>
+
+                <div className="pf-actions modal-form__actions">
+                    <button
+                        type="button"
+                        className="btn-primary btn-primary--outline"
+                        onClick={handleClose}
+                        disabled={submitting}
+                    >
+                        <span>Отмена</span>
+                    </button>
+                    <ButtonPrimary onClick={onSubmit} disabled={submitting}>
+                        {submitting ? 'Создание…' : 'Создать организацию'}
+                    </ButtonPrimary>
                 </div>
             </div>
         </>

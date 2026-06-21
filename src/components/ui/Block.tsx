@@ -1,6 +1,5 @@
 import { ReactNode } from 'react';
 
-import ButtonPrimary from './Buttons/ButtonPrimary';
 import logoPlaceholder from '../../assets/images/SLUG-horizontal.png';
 
 interface BlockProps {
@@ -8,23 +7,25 @@ interface BlockProps {
     name: string;
     /** URL логотипа. Если не передан — показываем заглушку. */
     logoUrl?: string | null;
-    /** Содержимое кнопки действия. Если не передано — кнопка не рендерится. */
+    /** Доп. подпись под названием (например, организационно-правовая форма). */
+    meta?: string;
+    /** Текст действия. Вместе с onClick делает карточку кликабельной. */
     children?: ReactNode;
     onClick?: () => void;
     disabled?: boolean;
 }
 
-/** Карточка-«плитка» (организация/компания) с логотипом и опциональной кнопкой действия. */
-export default function Block({ name, logoUrl, children, onClick, disabled }: BlockProps) {
-    return (
-        <div className="block">
+/** Карточка организации с адаптивным логотипом и опциональным действием. */
+export default function Block({ name, logoUrl, meta, children, onClick, disabled }: BlockProps) {
+    const interactive = typeof onClick === 'function';
+
+    const media = (
+        <div className="org-card__media">
             <img
-                className="block-logo"
+                className="org-card__logo"
                 src={logoUrl || logoPlaceholder}
                 alt={name}
-                width={134}
-                height={122}
-                style={{ objectFit: 'contain', borderRadius: 8, flexShrink: 0 }}
+                loading="lazy"
                 onError={(event) => {
                     // Если логотип не загрузился — откатываемся на заглушку.
                     const image = event.currentTarget;
@@ -33,16 +34,52 @@ export default function Block({ name, logoUrl, children, onClick, disabled }: Bl
                     }
                 }}
             />
+        </div>
+    );
 
-            <div className="block-content">
-                <span className="block-content__name">{name}</span>
+    const body = (
+        <div className="org-card__body">
+            <span className="org-card__name" title={name}>
+                {name}
+            </span>
 
-                {children != null && (
-                    <ButtonPrimary onClick={onClick} disabled={disabled}>
-                        {children}
-                    </ButtonPrimary>
-                )}
-            </div>
+            {meta && <span className="org-card__meta">{meta}</span>}
+
+            {interactive && children != null && (
+                <span className="org-card__action">
+                    {children}
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <path
+                            d="M5 12h14M13 6l6 6-6 6"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                </span>
+            )}
+        </div>
+    );
+
+    if (interactive) {
+        return (
+            <button
+                type="button"
+                className="org-card org-card--interactive"
+                onClick={onClick}
+                disabled={disabled}
+            >
+                {media}
+                {body}
+            </button>
+        );
+    }
+
+    return (
+        <div className="org-card">
+            {media}
+            {body}
         </div>
     );
 }

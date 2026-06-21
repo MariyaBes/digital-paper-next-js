@@ -10,11 +10,17 @@ export const SORT_FIELD_MAP: Record<string, string> = {
 };
 
 export const STATUS_COLORS: Record<string, string> = {
+    DRAFT: 'default',
     CREATED: 'blue',
     IN_PROGRESS: 'gold',
     PENDING_REVIEW: 'orange',
+    CHANGES_REQUESTED: 'volcano',
+    APPROVED: 'green',
+    SIGNED: 'cyan',
     DONE: 'green',
     REJECTED: 'red',
+    CANCELLED: 'default',
+    EXPIRED: 'default',
     DELETED: 'default',
 };
 
@@ -31,6 +37,7 @@ export function toRow(item: DocumentListItem): DataType {
         status: item.status,
         responsible: item.responsible,
         createdBy: item.responsible,
+        createdById: item.createdById,
         createdDate: formatDate(item.createdAt),
         updatedDate: formatDate(item.updatedAt),
     };

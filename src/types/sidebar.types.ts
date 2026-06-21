@@ -12,6 +12,8 @@ export interface MenuLink {
     icon: React.ReactNode;
     path: string;
     role?: 'EMPLOYEE' | 'OWNER';
+    /** Пункт виден только пользователям с правами директора (OWNER/ADMIN). */
+    directorOnly?: boolean;
     onClick?: () => void;
 }
 
